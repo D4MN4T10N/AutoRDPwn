@@ -105,7 +105,7 @@ Show-Menu
 Write-Host ""
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
 Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
-Set-ItemProperty Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System Name LocalAccountTokenFilterPolicy Value 1 -Type DWord
+Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
 winrm quickconfig -quiet; Set-Item wsman:\localhost\client\trustedhosts * -Force
 
 Write-Host ""
