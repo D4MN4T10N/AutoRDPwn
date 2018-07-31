@@ -114,7 +114,7 @@ $cred= New-Object System.Management.Automation.PSCredential ("$user", $password 
 $RDP = New-PSSession -Computer $computer -credential $cred
 
     invoke-command -session $RDP[0] -scriptblock {
-    powershell Set-Executionpolicy -Scope CurrentUser -ExecutionPolicy UnRestricted
+    powershell Set-Executionpolicy UnRestricted
     REG DELETE "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /f
     REG ADD "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /t REG_DWORD /d 1
     REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
