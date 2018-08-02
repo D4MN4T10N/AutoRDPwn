@@ -140,7 +140,7 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
         query session } 
         Write-Host ""
         $shadow = Read-Host -Prompt 'A qué sesión quieres conectarte?'
-        mstsc /v $computer /admin /shadow:1 /noconsentprompt /prompt /f }
+        mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }
 
     else {
         Write-Host ""
