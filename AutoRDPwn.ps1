@@ -54,7 +54,7 @@ Show-Menu
             Write-Host ""
             $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
             $Host.UI.RawUI.ForegroundColor = 'Cyan'
-            Invoke-WebRequest -Uri "https://live.sysinternals.com/psexec.exe" -OutFile "psexec.exe"
+            Invoke-WebRequest -Uri "https://live.sysinternals.com/psexec.exe" -OutFile "psexec.exe" -UseBasicParsing
             $PlainTextPassword = ConvertFrom-SecureToPlain $password
             .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "winrm quickconfig -quiet; Enable-PSRemoting -Force; Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private" -accepteula
             .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group="Administración Remota de Windows" new enable=yes ; netsh advfirewall firewall set rule group="Detección de redes" new enable=Yes -accepteula
@@ -67,7 +67,7 @@ Show-Menu
             Write-Host ""
             $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
             $Host.UI.RawUI.ForegroundColor = 'Cyan'
-            Invoke-WebRequest -Uri "https://live.sysinternals.com/PsExec64.exe" -OutFile "PsExec64.exe"
+            Invoke-WebRequest -Uri "https://live.sysinternals.com/PsExec64.exe" -OutFile "PsExec64.exe" -UseBasicParsing
             $PlainTextPassword = ConvertFrom-SecureToPlain $password
             .\PsExec64.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "winrm quickconfig -quiet; Enable-PSRemoting -Force; Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private" -accepteula
             .\PsExec64.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group="Administración Remota de Windows" new enable=yes ; netsh advfirewall firewall set rule group="Detección de redes" new enable=Yes -accepteula
@@ -160,7 +160,7 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
 
     invoke-command -session $RDP[0] -scriptblock {
-    Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi"
+    Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi" -UseBasicParsing
     msiexec /i "RDPWInst-v1.6.2.msi" /quiet /qn /norestart 
     Write-Host ""
     netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes
