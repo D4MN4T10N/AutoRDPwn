@@ -109,12 +109,12 @@ winrm quickconfig -quiet; Set-Item wsman:\localhost\client\trustedhosts * -Force
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Gray'
         $input = Read-Host "Quieres ver o controlar el equipo?"
+        $Host.UI.RawUI.ForegroundColor = 'Green'
         switch ($input) {
 
         'ver' {
         $control = "false"
         Write-Host ""
-        $Host.UI.RawUI.ForegroundColor = 'Green'
         REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
         Write-Host ""
         REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 4 }
@@ -122,7 +122,6 @@ winrm quickconfig -quiet; Set-Item wsman:\localhost\client\trustedhosts * -Force
         'controlar' {
         $control = "true"
         Write-Host ""
-        $Host.UI.RawUI.ForegroundColor = 'Green'
         REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
         Write-Host ""
         REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 2 }
