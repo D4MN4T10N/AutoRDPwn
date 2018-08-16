@@ -10,8 +10,8 @@ $Host.PrivateData.VerboseForegroundColor = 'Green'
 $Host.PrivateData.ProgressForegroundColor = 'Cyan'
 Clear-Host
 
-function Show-Menu
-{
+function Show-Menu {
+
      Write-Host ""
      Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue; Write-Host "         v2.0  " -ForegroundColor Yellow
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue; Write-Host "_  _  _______  " -ForegroundColor Green
@@ -25,8 +25,7 @@ function Show-Menu
      Write-Host "[1] - Lanzar el ataque a través de PsExec"
      Write-Host "[2] - Lanzar el ataque a través de WMI"
      Write-Host "[3] - Cerrar el programa"
-     Write-Host ""
-}
+     Write-Host "" }
 
 Set-StrictMode -Version Latest
 function ConvertFrom-SecureToPlain {
@@ -99,8 +98,7 @@ Show-Menu
         Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta; sleep -milliseconds 2500
         Clear-Host }}
         
-    }
-    until ($input -in '1','x86','x64','2','3')
+   } until ($input -in '1','x86','x64','2','3')
 
 Write-Host ""
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
