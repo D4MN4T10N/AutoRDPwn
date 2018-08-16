@@ -108,7 +108,7 @@ winrm quickconfig -quiet; Set-Item wsman:\localhost\client\trustedhosts * -Force
    do { 
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Gray'
-        $input = Read-Host "Quieres ver o controlar el equipo?"
+        $input = Read-Host -Prompt "Quieres ver o controlar el equipo?"
         $Host.UI.RawUI.ForegroundColor = 'Green'
         switch ($input) {
 
