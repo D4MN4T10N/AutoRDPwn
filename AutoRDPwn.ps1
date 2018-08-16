@@ -86,9 +86,9 @@ function ConvertFrom-SecureToPlain {
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Cyan'
         $PlainTextPassword = ConvertFrom-SecureToPlain $password
-        wmic /node:'$computer' /user:'$user' /password:'$PlainTextPassword' path win32_process call create "powershell.exe winrm quickconfig -quiet; Enable-PSRemoting -Force; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private"
-        wmic /node:'$computer' /user:'$user' /password:'$PlainTextPassword' path win32_process call create "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes ; netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes"
-        wmic /node:'$computer' /user:'$user' /password:'$PlainTextPassword' path win32_process call create "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" }
+        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe winrm quickconfig -quiet; Enable-PSRemoting -Force; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private"
+        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes ; netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes"
+        wmic /node'$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" }
 
         '3' { exit }
 
