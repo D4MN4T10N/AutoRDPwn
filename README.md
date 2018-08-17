@@ -25,6 +25,10 @@ La guía detallada de uso se encuentra en: https://darkbyte.net/autordpwn-the-sh
 # Licencia
 Este proyecto está licenciando bajo la licencia GNU 3.0 - ver el fichero LICENSE para más detalles.
 
+# Créditos y Agradecimientos
+• Mark Russinovich por su herramienta PsExec -> https://docs.microsoft.com/en-us/sysinternals/downloads/psexec
+• Marc R Kellerman por su herramienta Invoke-CommandAs -> https://github.com/mkellerman/Invoke-CommandAs
+
 # Contacto
 Este software no ofrece ningún tipo de garantía. Su uso es exclusivo para entornos educativos y/o auditorías de seguridad con el correspondiente consentimiento del cliente. No me hago responsable de su mal uso ni de los posibles daños causados por el mismo.
 
