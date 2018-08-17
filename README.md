@@ -5,6 +5,9 @@
 AutoRDPwn es un script creado en PowerShell para automatizar el proceso de visualización y control del escritorio de forma remota y sin consentimiento del usuario en equipos Windows. Para su correcto funcionamiento es necesario cumplir algunos requisitos que se describen en la guía de uso.
 
 # Cambios
+## Versión 2.4
+• Nuevo tipo de ataque disponible: ScheduleTask
+
 ## Versión 2.2
 • Mejoras y cambios de código
 
