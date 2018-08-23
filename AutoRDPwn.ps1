@@ -177,11 +177,11 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
         Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Gray'
-        query session } 
+        query session }  
         Write-Host ""
-        $shadow = Read-Host -Prompt 'A qué sesión quieres conectarte?'
-        if($control -eq 'true') { Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500 ; mstsc /v $computer /admin /shadow:$hadow /control /noconsentprompt /prompt /f }
-        else { Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500 ; mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
+        $shadow = Read-Host -Prompt 'A qué sesión quieres conectarte?' 
+        if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
+        else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
     else {
         Write-Host ""
@@ -210,9 +210,9 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
     Write-Host ""
     $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
     Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2500
-    Write-Host ""
     if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
     else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
 rm .\psexec.exe, .\PsExec64.exe 2> $null
+Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
