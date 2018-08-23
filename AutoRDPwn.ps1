@@ -140,27 +140,22 @@ winrm quickconfig -quiet ; Set-Item wsman:\localhost\client\trustedhosts * -Forc
         Write-Host ""
 	invoke-command -session $RDP[0] -scriptblock {
         powershell Set-Executionpolicy UnRestricted
-        REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
-        Write-Host ""
-        REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 4
-        taskkill /F /PID Rdp* 2> $null ; gpupdate /force 1> $null }}
+        REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f 2> $null
+        REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 4 }}
 
         'controlar' {
         $control = "true"
         Write-Host ""
 	invoke-command -session $RDP[0] -scriptblock {
         powershell Set-Executionpolicy UnRestricted
-        REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
-        Write-Host ""
-        REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 2
-	taskkill /F /PID Rdp* 2> $null ; gpupdate /force 1> $null }}
+        REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f 2> $null
+        REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 2 }}
 
         default {
         Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta ; sleep -milliseconds 2500 }}
 
       } until ($input -in 'ver','controlar')
 
-    Write-Host ""
     invoke-command -session $RDP[0] -scriptblock {
     REG DELETE "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /f 1> $null
     REG ADD "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /t REG_DWORD /d 1 1> $null
