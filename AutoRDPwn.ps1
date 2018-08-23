@@ -120,6 +120,9 @@ function ConvertFrom-SecureToPlain {
       } until ($input -in '1','x86','x64','2','3')
 
 Write-Host ""
+$credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
+$RDP = New-PSSession -Computer $computer -credential $credential
+
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
 Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
 Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
@@ -157,10 +160,7 @@ winrm quickconfig -quiet ; Set-Item wsman:\localhost\client\trustedhosts * -Forc
 
       } until ($input -in 'ver','controlar')
 
-Write-Host ""
-$credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
-$RDP = New-PSSession -Computer $computer -credential $credential
-
+    Write-Host ""
     invoke-command -session $RDP[0] -scriptblock {
     REG DELETE "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /f 1> $null
     REG ADD "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /t REG_DWORD /d 1 1> $null
