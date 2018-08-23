@@ -10,7 +10,7 @@ AutoRDPwn es un script creado en PowerShell para automatizar el proceso de visua
 ## Versión 2.6
 • Correción de errores
 
-• Autodetección de Id de sesión
+• Auto-detección de Id de sesión
 
 ## Versión 2.4
 • Nuevo tipo de ataque disponible: ScheduleTask
