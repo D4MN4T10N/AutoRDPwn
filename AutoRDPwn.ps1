@@ -135,18 +135,22 @@ winrm quickconfig -quiet ; Set-Item wsman:\localhost\client\trustedhosts * -Forc
         'ver' {
         $control = "false"
         Write-Host ""
+	invoke-command -session $RDP[0] -scriptblock {
+        powershell Set-Executionpolicy UnRestricted
         REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
         Write-Host ""
         REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 4
-        taskkill /F /PID Rdp* 2> $null ; gpupdate /force 1> $null }
+        taskkill /F /PID Rdp* 2> $null ; gpupdate /force 1> $null }}
 
         'controlar' {
         $control = "true"
         Write-Host ""
+	invoke-command -session $RDP[0] -scriptblock {
+        powershell Set-Executionpolicy UnRestricted
         REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f
         Write-Host ""
         REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 2
-	taskkill /F /PID Rdp* 2> $null ; gpupdate /force 1> $null }
+	taskkill /F /PID Rdp* 2> $null ; gpupdate /force 1> $null }}
 
         default {
         Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta ; sleep -milliseconds 2500 }}
@@ -158,7 +162,6 @@ $credential = New-Object System.Management.Automation.PSCredential ( $user, $pas
 $RDP = New-PSSession -Computer $computer -credential $credential
 
     invoke-command -session $RDP[0] -scriptblock {
-    powershell Set-Executionpolicy UnRestricted
     REG DELETE "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /f 1> $null
     REG ADD "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /t REG_DWORD /d 1 1> $null
     REG DELETE "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v AllowRemoteRPC /f 1> $null
