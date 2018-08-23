@@ -180,9 +180,8 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
         query session } 
         Write-Host ""
         $shadow = Read-Host -Prompt 'A qué sesión quieres conectarte?'
-        if($control -eq 'true') { mstsc /v $computer /admin /shadow:$hadow /control /noconsentprompt /prompt /f }
-        else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
-	Write-Host "Iniciando conexión remota.." -ForegroundColor Blue; sleep -milliseconds 2500
+        if($control -eq 'true') { Write-Host "Iniciando conexión remota.." -ForegroundColor Blue; sleep -milliseconds 2500 ; mstsc /v $computer /admin /shadow:$hadow /control /noconsentprompt /prompt /f }
+        else { Write-Host "Iniciando conexión remota.." -ForegroundColor Blue; sleep -milliseconds 2500 ; mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
     else {
         Write-Host ""
