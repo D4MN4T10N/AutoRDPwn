@@ -7,7 +7,7 @@ $Host.PrivateData.ErrorForegroundColor = 'Red'
 $Host.PrivateData.WarningForegroundColor = 'Magenta'
 $Host.PrivateData.DebugForegroundColor = 'Yellow'
 $Host.PrivateData.VerboseForegroundColor = 'Green'
-$Host.PrivateData.ProgressForegroundColor = 'Blue'
+$Host.PrivateData.ProgressForegroundColor = 'Black'
 Clear-Host
 
 function Show-Menu {
