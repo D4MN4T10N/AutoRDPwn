@@ -1,5 +1,5 @@
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
 $Host.UI.RawUI.WindowTitle = "AutoRDPwn - v2.6 - by @JoelGMSec"
 $Host.UI.RawUI.BackgroundColor = 'Black'
 $Host.UI.RawUI.ForegroundColor = 'Gray'
@@ -22,11 +22,11 @@ function Show-Menu {
      Write-Host "" 
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
      Write-Host "" 
-     Write-Output "[1] - Lanzar el ataque a través de PsExec"
-     Write-Output "[2] - Lanzar el ataque a través de WMI"
-     Write-Output "[3] - Lanzar el ataque a través de ScheduleTask"
-     Write-Output "[4] - Cerrar el programa"
-     Write-Output "" }
+     Write-Host "[1] - Lanzar el ataque a través de PsExec"
+     Write-Host "[2] - Lanzar el ataque a través de WMI"
+     Write-Host "[3] - Lanzar el ataque a través de ScheduleTask"
+     Write-Host "[4] - Cerrar el programa"
+     Write-Host "" }
 
 Set-StrictMode -Version Latest
 function ConvertFrom-SecureToPlain {
