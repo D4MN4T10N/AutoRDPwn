@@ -23,8 +23,8 @@ function Show-Menu {
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
      Write-Host "" 
      Write-Host "[1] - Lanzar el ataque a través de PsExec"
-     Write-Host "[2] - Lanzar el ataque a través de WMI"
-     Write-Host "[3] - Lanzar el ataque a través de ScheduleTask"
+     Write-Output "[2] - Lanzar el ataque a través de WMI"
+     [console]::writeline("[3] - Lanzar el ataque a través de ScheduleTask")
      Write-Host "[4] - Cerrar el programa"
      Write-Host "" }
 
