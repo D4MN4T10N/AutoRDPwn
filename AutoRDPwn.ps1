@@ -214,5 +214,6 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
     else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
 rm .\psexec.exe, .\PsExec64.exe 2> $null
+rm .\AutoRDPwn.ps1 2> $null
 Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
