@@ -29,7 +29,7 @@ AutoRDPwn es un script creado en PowerShell para automatizar el proceso de visua
 # Uso
 Ejecución en una línea:
 
-powershell -ExecutionPolicy Bypass "powershell iwr https://goo.gl/HSkAXP -Outfile "%TEMP%\AutoRDPwn.ps1" ; %TEMP%\AutoRDPwn.ps1"
+powershell -ExecutionPolicy Bypass "iwr https://goo.gl/HSkAXP -Outfile "%TEMP%\AutoRDPwn.ps1" ; %TEMP%\AutoRDPwn.ps1"
 
 La guía detallada de uso se encuentra en: https://darkbyte.net/autordpwn-the-shadow-attack-framework
 
