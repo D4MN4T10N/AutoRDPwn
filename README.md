@@ -34,7 +34,7 @@ La guía detallada de uso se encuentra en los siguientes enlaces:
 
 https://darkbyte.net/autordpwn-the-shadow-attack-framework 
 
-https://darkbyte.net/cambios-y-mejoras-en-autordpwn/
+https://darkbyte.net/cambios-y-mejoras-en-autordpwn
 
 # Licencia
 Este proyecto está licenciando bajo la licencia GNU 3.0 - ver el fichero LICENSE para más detalles.
