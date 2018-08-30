@@ -1,6 +1,6 @@
 # AutoRDPwn: The Shadow Attack Framework
 
-![AutoRDPwn](https://user-images.githubusercontent.com/34335312/43462139-96c50568-94d5-11e8-87a8-89e4185e4c2a.png)
+![autordpwn](https://user-images.githubusercontent.com/34335312/44861779-8bb95780-ac79-11e8-97e8-3008df1f0d5b.png)
 
 AutoRDPwn es un script creado en PowerShell para automatizar el proceso de visualización y control del escritorio de forma remota y sin consentimiento del usuario en equipos Windows. Para su correcto funcionamiento es necesario cumplir algunos requisitos que se describen en la guía de uso.
 
