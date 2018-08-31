@@ -13,7 +13,7 @@ Clear-Host
 function Show-Menu {
 
      Write-Host ""
-     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v2.6  " -ForegroundColor Yellow
+     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v2.8  " -ForegroundColor Yellow
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta ; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue ; Write-Host "_  _  _______  " -ForegroundColor Green
      Write-Host "  /  / \  \|  |  |   _| _  \" -NoNewLine -ForegroundColor Magenta ; Write-Host "|       _/|     \ |    ___/" -NoNewLine -ForegroundColor Blue ; Write-Host " \/ \/ /     \ " -ForegroundColor Green
      Write-Host " /  /___\  \  |  |  |  (_)  " -NoNewLine -ForegroundColor Magenta ; Write-Host "|   |    \|_____/ |   |" -NoNewLine -ForegroundColor Blue ; Write-Host " \        /   |   \" -ForegroundColor Green
@@ -43,31 +43,21 @@ function ConvertFrom-SecureToPlain {
     switch ($input) {
         '1' {
         Write-Host ""
-        $input = Read-Host -Prompt "El equipo es x86 o x64?"
+        $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
         Write-Host ""
-        switch ($input) {
+        $user = Read-Host -Prompt 'Y el usuario?'
+        Write-Host ""
+        $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
+        $PlainTextPassword = ConvertFrom-SecureToPlain $password      
+        $system = powershell "wmic /node:$computer /user:$user /password:$PlainTextPassword path Win32_OperatingSystem get OSArchitecture | findstr 'bits'" 2> $null
+        Write-Host ""
+        Write-Host "Detectando arquitectura del sistema operativo.." -ForegroundColor Magenta ; sleep -milliseconds 2500
+        Write-Host ""
+        if($system -in '32 bits','64 bits') { Write-Host "Sistema de $system detectado!" -ForegroundColor Green }
+        else { Write-Host "Imposible detectar la arquitectura del equipo, se intentará con la versión de 32 bits" -ForegroundColor Red } 
+        $Host.UI.RawUI.ForegroundColor = 'Blue'
 
-            'x86' {
-            $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
-            Write-Host ""
-            $user = Read-Host -Prompt 'Y el usuario?'
-            Write-Host ""
-            $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
-            $Host.UI.RawUI.ForegroundColor = 'Blue'
-            Invoke-WebRequest -Uri "https://live.sysinternals.com/psexec.exe" -OutFile "psexec.exe" -UseBasicParsing
-            $PlainTextPassword = ConvertFrom-SecureToPlain $password
-            .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "winrm quickconfig -quiet ; Enable-PSRemoting -Force ; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private" -accepteula
-            .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -accepteula
-            .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -accepteula
-            .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -accepteula }
-
-            'x64' {
-            $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
-            Write-Host ""
-            $user = Read-Host -Prompt 'Y el usuario?'
-            Write-Host ""
-            $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
-            $Host.UI.RawUI.ForegroundColor = 'Blue'
+            if($system -eq '64 bits') {
             Invoke-WebRequest -Uri "https://live.sysinternals.com/PsExec64.exe" -OutFile "PsExec64.exe" -UseBasicParsing
             $PlainTextPassword = ConvertFrom-SecureToPlain $password
             .\PsExec64.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "winrm quickconfig -quiet ; Enable-PSRemoting -Force ; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private" -accepteula
@@ -75,9 +65,13 @@ function ConvertFrom-SecureToPlain {
             .\PsExec64.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -accepteula
             .\PsExec64.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -accepteula }
 
-            default {
-            Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta ; sleep -milliseconds 2500
-            Clear-Host }}}
+            else {
+            Invoke-WebRequest -Uri "https://live.sysinternals.com/psexec.exe" -OutFile "psexec.exe" -UseBasicParsing
+            $PlainTextPassword = ConvertFrom-SecureToPlain $password
+            .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "winrm quickconfig -quiet ; Enable-PSRemoting -Force ; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private" -accepteula
+            .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -accepteula
+            .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -accepteula
+            .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -accepteula }}
 
         '2' {
         Write-Host ""
