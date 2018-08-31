@@ -14,15 +14,7 @@ AutoRDPwn es un script creado en Powershell y diseñado para automatizar el ataq
 ## Versión 2.4
 • Nuevo tipo de ataque disponible: ScheduleTask
 
-## Versión 2.2
-• Mejoras y cambios de código
-
-• Añadida la opción de visualizar o controlar el equipo remoto
-
-• Eliminado el popup de PsExec con el argumento -accepteula
-
-## Versión 2.0
-• Primera release pública
+*El resto de cambios se pueden consultar en el fichero CHANGELOG
 
 
 # Uso
