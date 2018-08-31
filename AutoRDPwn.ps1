@@ -53,7 +53,7 @@ function ConvertFrom-SecureToPlain {
         Write-Host "Detectando arquitectura del sistema operativo.." -ForegroundColor Magenta
         Write-Host ""
 	$system = powershell "wmic /node:$computer /user:$user /password:$PlainTextPassword path Win32_OperatingSystem get OSArchitecture | findstr 'bits'" 2> $null
-        if($system -in '32 bits','64 bits') { Write-Host "Sistema de $system detectado!" -ForegroundColor Green }
+        if($system -in '32 bits','64 bits') { Write-Host "Sistema de $system detectado, lanzando ataque!" -ForegroundColor Green }
         else { Write-Host "Imposible detectar la arquitectura del equipo, se intentará con la versión de 32 bits" -ForegroundColor Red } 
         $Host.UI.RawUI.ForegroundColor = 'Blue'
 
