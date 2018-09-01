@@ -7,7 +7,7 @@ AutoRDPwn es un script creado en Powershell y diseñado para automatizar el ataq
 # Cambios
 
 ## Versión 2.8
-• Auto-detección de la arquitectura del sistema remoto
+• Eliminada la opción de elegir la arquitectura del sistema remoto
 
 ## Versión 2.6
 • Correción de errores
