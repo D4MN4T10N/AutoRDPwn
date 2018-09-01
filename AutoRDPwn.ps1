@@ -41,6 +41,7 @@ function ConvertFrom-SecureToPlain {
     Show-Menu
     $input = Read-Host -Prompt "Elige la opción que más te interese"
     switch ($input) {
+    
         '1' {
         Write-Host ""
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
