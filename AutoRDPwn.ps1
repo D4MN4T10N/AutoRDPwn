@@ -194,3 +194,5 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 
 Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
+taskkill /F /IM powershell.exe
+del %TEMP%\AutoRDPwn.ps1
