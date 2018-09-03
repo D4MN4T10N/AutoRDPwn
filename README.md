@@ -1,6 +1,6 @@
 # AutoRDPwn: The Shadow Attack Framework
 
-![autordpwn](https://user-images.githubusercontent.com/34335312/44861972-01bdbe80-ac7a-11e8-92e1-bce9d669b6d5.png)
+![AutoRDPwn](https://user-images.githubusercontent.com/34335312/44974328-9ae12380-af5f-11e8-8644-296f6dbf878c.png)
 
 AutoRDPwn es un script creado en Powershell y diseñado para automatizar el ataque Shadow en equipos Microsoft Windows. Esta vulnerabilidad permite a un atacante remoto visualizar el escritorio de su víctima sin su consentimiento, e incluso controlarlo a petición. Para su correcto funcionamiento, es necesario cumplir los requisitos que se describen en la guía de uso.
 
