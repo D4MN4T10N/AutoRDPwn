@@ -194,4 +194,5 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 
 Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
-Start-Process powershell -windowstyle hidden { Get-Process powershell | sort starttime -Descending | Select -Last 1 | Stop-Process -Force ; sleep -milliseconds 2500 ; rm $env:temp\AutoRDPwn.ps1 2> $null ; rm AutoRDPwn.ps1 2> $null }
+$location = Get-Location | findstr \:\
+Start-Process powershell -windowstyle hidden { Get-Process powershell | sort starttime -Descending | Select -Last 1 | Stop-Process -Force ; rm $env:temp\AutoRDPwn.ps1 ; rm $location\AutoRDPwn.ps1 rm .\AutoRDPwn.ps1 }
