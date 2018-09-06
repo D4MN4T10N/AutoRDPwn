@@ -194,5 +194,5 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 
 Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
-$CurrentScriptFullPathName = $MyInvocation.MyCommand.Definition
-Remove-Item $CurrentScriptFullPathName
+$PScript = $MyInvocation.MyCommand.Definition
+Remove-Item $PScript
