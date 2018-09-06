@@ -194,5 +194,5 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 
 Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
-$location = Get-Location | findstr \:\
-Start-Process powershell -windowstyle hidden { Get-Process powershell | sort starttime -Descending | Select -Last 1 | Stop-Process -Force ; del $env:temp\AutoRDPwn.ps1, $location\AutoRDPwn.ps1, .\AutoRDPwn.ps1 }
+$CurrentScriptFullPathName = $MyInvocation.MyCommand.Definition
+Remove-Item $CurrentScriptFullPathName
