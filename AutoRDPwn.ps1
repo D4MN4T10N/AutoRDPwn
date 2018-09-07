@@ -126,8 +126,7 @@ function ConvertFrom-SecureToPlain {
       } until ($input -in '1','2','3','4')
 
 
-if($PassTheHash -eq "true") { Write-Host "Función no disponible actualmente :(" -ForegroundColor Red ; sleep -milliseconds 4500 ; exit } -ErrorAction SilentlyContinue
-else { Write-Host ""
+if(Test-Path variable:global:PassTheHash) { 2> $null } else { Write-Host ""
 $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 $RDP = New-PSSession -Computer $computer -credential $credential }
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
