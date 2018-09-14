@@ -229,21 +229,23 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
         ServicePoint srvPoint, X509Certificate certificate,
         WebRequest request, int certificateProblem) {
         return true; }}
-"@      $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
-        [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
-        [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
-        invoke-command -session $RDP[0] -scriptblock {
-        Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi" -UseBasicParsing
-        msiexec /i "RDPWInst-v1.6.2.msi" /quiet /qn /norestart 
-        netsh advfirewall firewall delete rule name="Agente de sesión de RDP" 1> $null
-        netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
-        netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=tcp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
-        sleep -milliseconds 7500 ; rm .\RDPWInst-v1.6.2.msi 2> $null }
-        Write-Host ""
-        $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
-        Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2500
-        if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
-        else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
+"@
+$AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
+[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
+
+    invoke-command -session $RDP[0] -scriptblock {
+    Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi" -UseBasicParsing
+    msiexec /i "RDPWInst-v1.6.2.msi" /quiet /qn /norestart 
+    netsh advfirewall firewall delete rule name="Agente de sesión de RDP" 1> $null
+    netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
+    netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=tcp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
+    sleep -milliseconds 7500 ; rm .\RDPWInst-v1.6.2.msi 2> $null }
+    Write-Host ""
+    $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
+    Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2500
+    if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
+    else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
 Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
