@@ -46,7 +46,7 @@ function EnableTLS {
     ServicePoint srvPoint, X509Certificate certificate,
     WebRequest request, int certificateProblem) {
     return true; }}
-"@  $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+"@; $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
     [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
     [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
 
@@ -228,7 +228,7 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
         ServicePoint srvPoint, X509Certificate certificate,
         WebRequest request, int certificateProblem) {
         return true; }}
-"@      $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+"@;     $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
         [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
         [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
 
