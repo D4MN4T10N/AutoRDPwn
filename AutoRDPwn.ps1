@@ -38,18 +38,18 @@ function ConvertFrom-SecureToPlain {
     $PlainTextPassword }
 
 function EnableTLS {
-        add-type @"
-        using System.Net;
-        using System.Security.Cryptography.X509Certificates;
-        public class TrustAllCertsPolicy : ICertificatePolicy {
-        public bool CheckValidationResult(
-        ServicePoint srvPoint, X509Certificate certificate,
-        WebRequest request, int certificateProblem) {
-        return true; }}
-"@
-$AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
-[System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
-[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
+    add-type @"
+    using System.Net;
+    using System.Security.Cryptography.X509Certificates;
+    public class TrustAllCertsPolicy : ICertificatePolicy {
+    public bool CheckValidationResult(
+    ServicePoint srvPoint, X509Certificate certificate,
+    WebRequest request, int certificateProblem) {
+    return true; }}
+    "@
+    $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+    [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
 
 
     do { 
@@ -222,7 +222,20 @@ $Host.UI.RawUI.ForegroundColor = 'Gray'
         Write-Host ""
         Write-Host "$version detectado, aplicando parche.."
         invoke-command -session $RDP[0] -scriptblock {
-        EnableTLS ; Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi" -UseBasicParsing
+        add-type @"
+        using System.Net;
+        using System.Security.Cryptography.X509Certificates;
+        public class TrustAllCertsPolicy : ICertificatePolicy {
+        public bool CheckValidationResult(
+        ServicePoint srvPoint, X509Certificate certificate,
+        WebRequest request, int certificateProblem) {
+        return true; }}
+        "@
+        $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+        [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
+        [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
+        invoke-command -session $RDP[0] -scriptblock {
+        Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi" -UseBasicParsing
         msiexec /i "RDPWInst-v1.6.2.msi" /quiet /qn /norestart 
         netsh advfirewall firewall delete rule name="Agente de sesión de RDP" 1> $null
         netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
