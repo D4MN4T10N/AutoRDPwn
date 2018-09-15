@@ -167,7 +167,6 @@ function EnableTLS {
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Gray'
         $input = Read-Host -Prompt "Quieres ver o controlar el equipo?"
-        $Host.UI.RawUI.ForegroundColor = 'Green'
         switch ($input) {
 
         'ver' {
@@ -177,7 +176,7 @@ function EnableTLS {
         powershell Set-Executionpolicy UnRestricted
         REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f 1> $null
         REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 4 1> $null 
-	Write-Host "Modificando permisos para visualizar el equipo remoto.." }}}
+	Write-Host "Modificando permisos para visualizar el equipo remoto.." -ForegroundColor Green }}
 
         'controlar' {
         $control = "true"
@@ -186,14 +185,14 @@ function EnableTLS {
         powershell Set-Executionpolicy UnRestricted
         REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f 1> $null
         REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 2 1> $null 
-	Write-Host "Modificando permisos para controlar el equipo remoto.." }}}
+	Write-Host "Modificando permisos para controlar el equipo remoto.." -ForegroundColor Green }}
 
         default {
         Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta ; sleep -milliseconds 2500 }}
 
       } until ($input -in 'ver','controlar')
 
-    invoke-command -session $RDP[0] -scriptblock {
+    invoke-command -session $RDP[0] -scriptblock { Write-Host ""
     REG DELETE "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /f 1> $null
     REG ADD "HKLM\SOFTWARE\Microsoft\WBEM\CIMOM" /v AllowAnonymousCallback /t REG_DWORD /d 1 1> $null
     REG DELETE "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v AllowRemoteRPC /f 1> $null
@@ -203,7 +202,7 @@ function EnableTLS {
     REG DELETE "HKLM\System\CurrentControlSet\Control\Lsa" /v DisableRestrictedAdmin /f 1> $null
     REG ADD "HKLM\System\CurrentControlSet\Control\Lsa" /v DisableRestrictedAdmin /t REG_DWORD /d 0 1> $null 
     Write-Host "Cambios en el registro de Windows realizados con éxito" }
-    
+    Write-Host ""
     $hostname = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "host" | select -First 1).split(':')[1].trim()}
     Write-Host "Detectando versión del sistema operativo en $hostname.." -ForegroundColor Magenta 
     $version = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "Microsoft Windows" | select -First 1).split(':')[1].trim()}
