@@ -1,6 +1,6 @@
 ﻿if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("utf-8")
-$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v2.8 - by @JoelGMSec"
+$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v3.0 - by @JoelGMSec"
 $Host.UI.RawUI.BackgroundColor = 'Black'
 $Host.UI.RawUI.ForegroundColor = 'Gray'
 $Host.PrivateData.ErrorForegroundColor = 'Red'
@@ -14,7 +14,7 @@ Clear-Host
 
 function Show-Menu {
      Write-Host ""
-     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v2.8  " -ForegroundColor Yellow
+     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v3.0  " -ForegroundColor Yellow
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta ; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue ; Write-Host "_  _  _______  " -ForegroundColor Green
      Write-Host "  /  / \  \|  |  |   _| _  \" -NoNewLine -ForegroundColor Magenta ; Write-Host "|       _/|     \ |    ___/" -NoNewLine -ForegroundColor Blue ; Write-Host " \/ \/ /     \ " -ForegroundColor Green
      Write-Host " /  /___\  \  |  |  |  (_)  " -NoNewLine -ForegroundColor Magenta ; Write-Host "|   |    \|_____/ |   |" -NoNewLine -ForegroundColor Blue ; Write-Host " \        /   |   \" -ForegroundColor Green
