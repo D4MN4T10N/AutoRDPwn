@@ -1,3 +1,12 @@
+# Versión 2.8
+• Eliminada la opción de elegir la arquitectura del sistema remoto
+
+# Versión 2.6
+• Correción de errores
+
+• Auto-detección de Id de sesión
+
+
 # Versión 2.4
 • Nuevo tipo de ataque disponible: ScheduleTask
 
