@@ -266,7 +266,7 @@ function EnableTLS {
 
 Write-Host ""
 $session = get-pssession
-if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2000 }
-else { Write-Host "Algo salió mal :(" -ForegroundColor Red ; sleep -milliseconds 2000 }
+if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 3000 }
+else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
 $PScript = $MyInvocation.MyCommand.Definition
 Remove-Item $PScript
