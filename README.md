@@ -6,13 +6,12 @@ AutoRDPwn es un script creado en Powershell y diseñado para automatizar el ataq
 
 # Cambios
 
-## Versión 2.8
-• Eliminada la opción de elegir la arquitectura del sistema remoto
-
-## Versión 2.6
-• Correción de errores
-
-• Auto-detección de Id de sesión
+## Versión 3.0
+• Modo de depuración deshabilitado
+• Nuevo tipo de ataque disponible: Pass The Hash (Beta)
+• Resolución de nombre de host remoto
+• Corrección de errores
+• Mejoras de código
 
 *El resto de cambios se pueden consultar en el fichero CHANGELOG
 
