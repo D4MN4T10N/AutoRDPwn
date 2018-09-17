@@ -45,6 +45,11 @@ Este proyecto está licenciando bajo la licencia GNU 3.0 - ver el fichero LICENS
 
 • Stas'M Corp. por su herramienta RDP Wrapper -> https://github.com/stascorp/rdpwrap
 
+• Kevin Robertson por su herramienta Invoke-TheHash -> https://github.com/Kevin-Robertson/Invoke-TheHash
+
+• Benjamin Delpy por su herramienta Mimikatz -> https://github.com/gentilkiwi/mimikatz
+
+
 # Contacto
 Este software no ofrece ningún tipo de garantía. Su uso es exclusivo para entornos educativos y/o auditorías de seguridad con el correspondiente consentimiento del cliente. No me hago responsable de su mal uso ni de los posibles daños causados por el mismo.
 
