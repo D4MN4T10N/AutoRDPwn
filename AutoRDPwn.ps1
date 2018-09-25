@@ -22,7 +22,7 @@ function Show-Menu {
      Write-Host "  \/     \/                 " -NoNewLine -ForegroundColor Magenta ; Write-Host "       \/              " -NoNewLine -ForegroundColor Blue ; Write-Host "                \/ " -ForegroundColor Green
      Write-Host "" 
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-     Write-Host "::  The Shadow Attack Framework  :: v3.1 ::  Created by @JoelGMSec  ::"
+     Write-Host "::  The Shadow Attack Framework  :: v3.1 ::  Created by @JoelGMSec  ::" -ForegroundColor Yellow
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
      Write-Host ""   
      Write-Host "[1] - PsExec"
@@ -56,7 +56,7 @@ function EnableTLS {
 
     do { 
     Show-Menu
-    $input = Read-Host -Prompt "Elige la opción que más te interese"
+    $input = Read-Host -Prompt "Elige cómo quieres lanzar el ataque"
     switch ($input) {
     
         '1' {
