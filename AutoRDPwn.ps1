@@ -153,6 +153,7 @@ function EnableTLS {
         Write-Host ""
         $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
         $Host.UI.RawUI.ForegroundColor = 'Blue'
+	Set-Item wsman:\localhost\client\trustedhosts * -Force
         WinRS -r:$computer -u:$user -p:$password powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" 
         WinRS -r:$computer -u:$user -p:$password powershell.exe "netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" 
         WinRS -r:$computer -u:$user -p:$password powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" 
