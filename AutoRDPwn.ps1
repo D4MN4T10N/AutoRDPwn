@@ -14,16 +14,16 @@ Clear-Host
 
 function Show-Menu {
      Write-Host ""
-     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v3.1  " -ForegroundColor Yellow
+     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "               " -ForegroundColor Green
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta ; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue ; Write-Host "_  _  _______  " -ForegroundColor Green
      Write-Host "  /  / \  \|  |  |   _| _  \" -NoNewLine -ForegroundColor Magenta ; Write-Host "|       _/|     \ |    ___/" -NoNewLine -ForegroundColor Blue ; Write-Host " \/ \/ /     \ " -ForegroundColor Green
      Write-Host " /  /___\  \  |  |  |  (_)  " -NoNewLine -ForegroundColor Magenta ; Write-Host "|   |    \|_____/ |   |" -NoNewLine -ForegroundColor Blue ; Write-Host " \        /   |   \" -ForegroundColor Green
      Write-Host " \  _____  /_____/__|\_____/" -NoNewLine -ForegroundColor Magenta ; Write-Host "|___|__  /_______/|___|" -NoNewLine -ForegroundColor Blue ; Write-Host "  \__/\__/|___|_  /" -ForegroundColor Green
-     Write-Host "  \/     \/                 " -NoNewLine -ForegroundColor Magenta ; Write-Host "       \/              " -NoNewLine -ForegroundColor Blue ; Write-Host -NoNewLine "   by @JoelGMSec" -ForegroundColor Yellow ; Write-Host "\/ " -ForegroundColor Green
+     Write-Host "  \/     \/                 " -NoNewLine -ForegroundColor Magenta ; Write-Host "       \/              " -NoNewLine -ForegroundColor Blue ; Write-Host "                \/ " -ForegroundColor Green
      Write-Host "" 
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-     Write-Host ""
-     Write-Host "Elige cómo quieres lanzar el ataque:"
+     Write-Host "::  The Shadow Attack Framework  :: v3.1 ::  Created by @JoelGMSec  ::"
+     Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
      Write-Host ""   
      Write-Host "[1] - PsExec"
      Write-Host "[2] - Pass the Hash (Beta)"
