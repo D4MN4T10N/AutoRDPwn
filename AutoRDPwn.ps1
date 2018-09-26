@@ -145,10 +145,10 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
 	(New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/mkellerman/Invoke-CommandAs/master/Invoke-CommandAs.psm1") | iex
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "$Ps1" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "$Ps2" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "$Ps3" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "$Ps4" }}
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { "powershell.exe $Ps1" }
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { "powershell.exe $Ps2" }
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { "powershell.exe $Ps3" }
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { "powershell.exe $Ps4" }}
 
         '5' {
         Write-Host ""
