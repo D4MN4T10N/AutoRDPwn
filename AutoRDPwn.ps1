@@ -152,6 +152,7 @@ function EnableTLS {
         $user = Read-Host -Prompt 'Y el usuario?'
         Write-Host ""
         $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
+	Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
 	$PlainTextPassword = ConvertFrom-SecureToPlain $password
         WinRS -r:$computer -u:$user -p:$PlainTextPassword powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" 
