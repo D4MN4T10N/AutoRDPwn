@@ -22,7 +22,7 @@ function Show-Menu {
      Write-Host "  \/                        " -NoNewLine -ForegroundColor Magenta ; Write-Host "       \/              " -NoNewLine -ForegroundColor Blue ; Write-Host "                \/ " -ForegroundColor Green
      Write-Host "" 
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-     Write-Host "::  The Shadow Attack Framework  :: v3" -NoNewLine -ForegroundColor Yellow ; Write-Host "." -NoNewLine -ForegroundColor Red ; Write-Host "1 ::  Created by @JoelGMSec  ::" -ForegroundColor Yellow
+     Write-Host "::" -NoNewLine -ForegroundColor Gray ; Write-Host "  The Shadow Attack Framework" -NoNewLine -ForegroundColor Yellow ; Write-Host "  :: " -NoNewLine -ForegroundColor Gray ; Write-Host "v3" -NoNewLine -ForegroundColor Yellow ; Write-Host "." -NoNewLine -ForegroundColor Red ; Write-Host "1" -NoNewLine -ForegroundColor Yellow ; Write-Host " ::" -NoNewLine -ForegroundColor Gray ; Write-Host "  Created by @JoelGMSec  ::" -ForegroundColor Yellow
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
      Write-Host ""   
      Write-Host "[1] - PsExec"
