@@ -302,7 +302,7 @@ Write-Host ""
 $session = get-pssession
 if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 3000 
 $PlainTextPassword = ConvertFrom-SecureToPlain $password
-Write-Host ""; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }
+Clear-Host ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
 $PScript = $MyInvocation.MyCommand.Definition
 Remove-Item $PScript
