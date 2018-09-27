@@ -309,7 +309,7 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
 
 Write-Host ""
 $session = get-pssession
-if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Blue ; sleep -milliseconds 3000 
+if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Magenta ; sleep -milliseconds 3000 
 $PlainTextPassword = ConvertFrom-SecureToPlain $password
 if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
