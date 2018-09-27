@@ -230,7 +230,7 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
     REG ADD "HKLM\System\CurrentControlSet\Control\Remote Assistance" /v fAllowToGetHelp /t REG_DWORD /d 1 1> $null
     REG DELETE "HKLM\System\CurrentControlSet\Control\Remote Assistance" /v fAllowFullControl /f 1> $null
     REG ADD "HKLM\System\CurrentControlSet\Control\Remote Assistance" /v fAllowFullControl /t REG_DWORD /d 1 1> $null
-    Write-Host "Cambios en el registro de Windows realizados con éxito" -ForegroundColor Green ; Write-Host "" }
+    Write-Host "Cambios en el registro de Windows realizados con éxito." -ForegroundColor Green ; Write-Host "" }
     $hostname = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "host" | select -First 1).split(':')[1].trim()}
     Write-Host "Detectando versión del sistema operativo en $hostname.." -ForegroundColor Magenta 
     $version = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "Microsoft Windows" | select -First 1).split(':')[1].trim()}
