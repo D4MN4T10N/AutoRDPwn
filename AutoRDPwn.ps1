@@ -29,7 +29,7 @@ function Show-Menu {
      Write-Host "[1] - PsExec"
      Write-Host "[2] - Pass the Hash (Beta)"
      Write-Host "[3] - Windows Management Instrumentation"
-     Write-Host "[4] - Schedule Task"
+     Write-Host "[4] - Schedule Task / PSSession"
      Write-Host "[5] - Windows Remote Assistance"
      Write-Host "[M] - Cargar módulos adicionales"
      Write-Host "[X] - Cerrar el programa"
