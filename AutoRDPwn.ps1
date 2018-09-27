@@ -170,8 +170,9 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         'M' { 
         Clear-Host; Show-Banner ; Write-Host "[1] - Consola semi-interactiva" ; Write-Host ""
         $console = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
-        if($console -like '1') { Write-Host "Módulo cargado con éxito!" -ForegroundColor Magenta
-        sleep -milliseconds 2000 ; Clear-Host }}
+        if($console -like '1') { Write-Host "Módulo cargado con éxito!" -ForegroundColor Green }
+        else { Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta }
+        sleep -milliseconds 2000 ; Clear-Host }
 	
         'X' { exit }
 
