@@ -6,12 +6,10 @@ AutoRDPwn es un script creado en Powershell y diseñado para automatizar el ataq
 
 # Cambios
 
-## Versión 3.1
-• Nuevo tipo de ataque disponible - Windows Remote Assistance
+## Versión 3.5
+• Nueva funcionalidad - Cargar módulos adicionales
 
-• Optimización de código
-
-• Cambios en menús y nuevo banner
+• Nuevo módulo adicional - Consola semi-interactiva
 
 
 *El resto de cambios se pueden consultar en el fichero CHANGELOG
