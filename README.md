@@ -7,6 +7,8 @@ AutoRDPwn es un script creado en Powershell y diseñado para automatizar el ataq
 # Cambios
 
 ## Versión 3.5
+• El ataque Pass The Hash pasa a ser estable 
+
 • Nueva funcionalidad - Cargar módulos adicionales
 
 • Nuevo módulo adicional - Mimikatz
