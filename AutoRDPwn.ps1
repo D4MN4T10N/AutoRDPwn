@@ -27,7 +27,7 @@ function Show-Banner {
      Write-Host "" }
 function Show-Menu {  
      Write-Host "[1] - PsExec"
-     Write-Host "[2] - Pass the Hash (Beta)"
+     Write-Host "[2] - Pass the Hash"
      Write-Host "[3] - Windows Management Instrumentation"
      Write-Host "[4] - Schedule Task / PSSession"
      Write-Host "[5] - Windows Remote Assistance"
