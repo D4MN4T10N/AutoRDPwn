@@ -1,23 +1,30 @@
+# Versión 3.3
+• Corrección de errores
+• Nuevas reglas de firewall
+• Añadidos más cambios en el registro de Windows
+
+
+# Versión 3.1
+• Nuevo tipo de ataque disponible - Windows Remote Assistance
+• Optimización de código
+• Cambios en menús y nuevo banner
+
+
 # Versión 3.0
 • Autodestrucción del script tras su ejecución
-
 • Modo de depuración deshabilitado
-
 • Nuevo tipo de ataque disponible: Pass The Hash (Beta)
-
 • Resolución de nombre de host remoto
-
 • Corrección de errores
-
 • Mejoras de código
 
 
 # Versión 2.8
 • Eliminada la opción de elegir la arquitectura del sistema remoto
 
+
 # Versión 2.6
 • Correción de errores
-
 • Auto-detección de Id de sesión
 
 
@@ -27,9 +34,7 @@
 
 # Versión 2.2
 • Mejoras y cambios de código
-
 • Añadida la opción de visualizar o controlar el equipo remoto
-
 • Eliminado el popup de PsExec con el argumento -accepteula
 
 
