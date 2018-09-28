@@ -10,7 +10,7 @@ $Host.PrivateData.VerboseForegroundColor = 'Green'
 $Host.PrivateData.ProgressForegroundColor = 'White'
 $Host.PrivateData.ProgressBackgroundColor = 'Blue'
 $ErrorActionPreference = "SilentlyContinue"
-Clear-Host
+Set-StrictMode -Off ; Clear-Host
 
 function Show-Banner {
      Write-Host ""
