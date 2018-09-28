@@ -9,6 +9,8 @@ AutoRDPwn es un script creado en Powershell y diseñado para automatizar el ataq
 ## Versión 3.5
 • Nueva funcionalidad - Cargar módulos adicionales
 
+• Nuevo módulo adicional - Mimikatz
+
 • Nuevo módulo adicional - Consola semi-interactiva
 
 
