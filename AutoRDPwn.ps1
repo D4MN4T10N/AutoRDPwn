@@ -35,7 +35,6 @@ function Show-Menu {
      Write-Host "[X] - Cerrar el programa"
      Write-Host "" }
 
-Set-StrictMode -Version Latest
 function ConvertFrom-SecureToPlain {
     param([Parameter(Mandatory=$true)][System.Security.SecureString] $SecurePassword)
     $PasswordPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecurePassword)
