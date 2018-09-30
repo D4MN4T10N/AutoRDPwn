@@ -24,11 +24,10 @@ Ejecución en una línea:
 
 powershell -ExecutionPolicy Bypass "cd $env:TEMP ; iwr https://goo.gl/HSkAXP -Outfile AutoRDPwn.ps1 ; .\AutoRDPwn.ps1"
 
-La guía detallada de uso se encuentra en los siguientes enlaces: 
+La guía detallada de uso se encuentra en el siguiente enlace: 
 
-https://darkbyte.net/autordpwn-the-shadow-attack-framework 
+https://darkbyte.net/autordpwn-la-guia-definitiva
 
-https://darkbyte.net/cambios-y-mejoras-en-autordpwn
 
 # Licencia
 Este proyecto está licenciando bajo la licencia GNU 3.0 - ver el fichero LICENSE para más detalles.
