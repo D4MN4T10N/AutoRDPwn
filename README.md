@@ -20,11 +20,11 @@
 
 
 # Uso
-**Ejecución en una línea:
+**Ejecución en una línea:**
 
 powershell -ExecutionPolicy Bypass "cd $env:TEMP ; iwr https://goo.gl/HSkAXP -Outfile AutoRDPwn.ps1 ; .\AutoRDPwn.ps1"
 
-**La guía detallada de uso se encuentra en el siguiente enlace: 
+**La guía detallada de uso se encuentra en el siguiente enlace:**
 
 https://darkbyte.net/autordpwn-la-guia-definitiva
 
