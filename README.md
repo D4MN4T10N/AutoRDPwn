@@ -48,4 +48,4 @@ Este proyecto está licenciando bajo la licencia GNU 3.0 - ver el fichero LICENS
 # Contacto
 Este software no ofrece ningún tipo de garantía. Su uso es exclusivo para entornos educativos y/o auditorías de seguridad con el correspondiente consentimiento del cliente. No me hago responsable de su mal uso ni de los posibles daños causados por el mismo.
 
-Para más información, puede contactar a través de **info@darkbyte.net
+Para más información, puede contactar a través de info@darkbyte.net
