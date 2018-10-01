@@ -1,4 +1,6 @@
 ﻿if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
+$Powershell = (Get-Host | findstr "Version" | select -First 1).split(':')[1].trim()
+if($Powershell -lt 5) { Write-Host "Tu versión de Powershell no es compatible con este script." -ForegroundColor 'Red' ; sleep -milliseconds 3000 ; exit }
 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("utf-8")
 $Host.UI.RawUI.WindowTitle = "AutoRDPwn - v3.5 - by @JoelGMSec"
 $Host.UI.RawUI.BackgroundColor = 'Black'
