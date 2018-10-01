@@ -4,6 +4,11 @@
 
 **AutoRDPwn** es un script creado en Powershell y diseñado para automatizar el ataque **Shadow** en equipos Microsoft Windows. Esta vulnerabilidad permite a un atacante remoto visualizar el escritorio de su víctima sin su consentimiento, e incluso controlarlo a petición. Para su correcto funcionamiento, es necesario cumplir los requisitos que se describen en la guía de uso.
 
+
+# Requisitos
+Powershell 5.0 o superior
+
+
 # Cambios
 
 ## Versión 3.5
