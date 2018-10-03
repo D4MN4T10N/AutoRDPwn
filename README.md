@@ -12,15 +12,10 @@ Powershell 5.0 o superior
 
 # Cambios
 
-## Versión 3.5
-• El ataque Pass The Hash pasa a ser estable 
+## Versión 3.7
+• Auto-detección de la versión de Powershell instalada
 
-• Nueva funcionalidad - Cargar módulos adicionales
-
-• Nuevo módulo adicional - Mimikatz
-
-• Nuevo módulo adicional - Consola semi-interactiva
-
+• El usuario "AutoRDPwn" se elimina automáticamente al finalizar el ataque
 
 *El resto de cambios se pueden consultar en el fichero CHANGELOG
 
