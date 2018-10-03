@@ -2,7 +2,7 @@
 $Powershell = (Get-Host | findstr "Version" | select -First 1).split(':')[1].trim()
 if($Powershell -lt 5) { Write-Host "Tu versión de Powershell no es compatible con este script." -ForegroundColor 'Red' ; sleep -milliseconds 3000 ; exit }
 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("utf-8")
-$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v3.5 - by @JoelGMSec"
+$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v3.7 - by @JoelGMSec"
 $Host.UI.RawUI.BackgroundColor = 'Black'
 $Host.UI.RawUI.ForegroundColor = 'Gray'
 $Host.PrivateData.ErrorForegroundColor = 'Red'
@@ -24,7 +24,7 @@ function Show-Banner {
      Write-Host "  \/                        " -NoNewLine -ForegroundColor Magenta ; Write-Host "       \/              " -NoNewLine -ForegroundColor Blue ; Write-Host "                \/ " -ForegroundColor Green
      Write-Host "" 
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-     Write-Host "::" -NoNewLine -ForegroundColor Gray ; Write-Host "  The Shadow Attack Framework" -NoNewLine -ForegroundColor Yellow ; Write-Host "  :: " -NoNewLine -ForegroundColor Gray ; Write-Host "v3.5" -NoNewLine -ForegroundColor Yellow ; Write-Host " ::" -NoNewLine -ForegroundColor Gray ; Write-Host "  Created by @JoelGMSec" -NoNewLine -ForegroundColor Yellow ; Write-Host "  ::" -ForegroundColor Gray
+     Write-Host "::" -NoNewLine -ForegroundColor Gray ; Write-Host "  The Shadow Attack Framework" -NoNewLine -ForegroundColor Yellow ; Write-Host "  :: " -NoNewLine -ForegroundColor Gray ; Write-Host "v3.7" -NoNewLine -ForegroundColor Yellow ; Write-Host " ::" -NoNewLine -ForegroundColor Gray ; Write-Host "  Created by @JoelGMSec" -NoNewLine -ForegroundColor Yellow ; Write-Host "  ::" -ForegroundColor Gray
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
      Write-Host "" }
 function Show-Menu {  
@@ -282,5 +282,5 @@ $session = get-pssession ; Write-Host "" ; if ($session){ Write-Host "Iniciando 
 $PlainTextPassword = ConvertFrom-SecureToPlain $password
 if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
-if ($hash){ invoke-command -session $RDP[0] -scriptblock { powershell sleep -s 360 ; net user AutoRDPwn /delete }}
+if ($hash){ invoke-command -session $RDP[0] -scriptblock { powershell net user AutoRDPwn /delete ; rmdir C:\Users\AutoRDPwn* -Force }}
 $PScript = $MyInvocation.MyCommand.Definition ; Remove-Item $PScript
