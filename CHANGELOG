@@ -1,3 +1,10 @@
+# Versión 3.5
+• El ataque Pass The Hash pasa a ser estable
+• Nueva funcionalidad - Cargar módulos adicionales
+• Nuevo módulo adicional - Mimikatz
+• Nuevo módulo adicional - Consola semi-interactiva
+
+
 # Versión 3.3
 • Corrección de errores
 • Nuevas reglas de firewall
