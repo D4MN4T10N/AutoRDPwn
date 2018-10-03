@@ -282,4 +282,5 @@ $session = get-pssession ; Write-Host "" ; if ($session){ Write-Host "Iniciando 
 $PlainTextPassword = ConvertFrom-SecureToPlain $password
 if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
+if ($hash){ invoke-command -session $RDP[0] -scriptblock { powershell net user AutoRDPwn /delete }
 $PScript = $MyInvocation.MyCommand.Definition ; Remove-Item $PScript
