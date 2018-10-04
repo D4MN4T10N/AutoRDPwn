@@ -35,15 +35,15 @@ Este proyecto está licenciando bajo la licencia GNU 3.0 - ver el fichero LICENS
 
 
 # Créditos y Agradecimientos
-• Mark Russinovich por su herramienta PsExec -> https://docs.microsoft.com/en-us/sysinternals/downloads/psexec
+• **Mark Russinovich** por su herramienta PsExec -> https://docs.microsoft.com/en-us/sysinternals/downloads/psexec
 
-• Marc R Kellerman por su herramienta Invoke-CommandAs -> https://github.com/mkellerman/Invoke-CommandAs
+• **Marc R Kellerman** por su herramienta Invoke-CommandAs -> https://github.com/mkellerman/Invoke-CommandAs
 
-• Stas'M Corp. por su herramienta RDP Wrapper -> https://github.com/stascorp/rdpwrap
+• **Stas'M Corp.** por su herramienta RDP Wrapper -> https://github.com/stascorp/rdpwrap
 
-• Kevin Robertson por su herramienta Invoke-TheHash -> https://github.com/Kevin-Robertson/Invoke-TheHash
+• **Kevin Robertson** por su herramienta Invoke-TheHash -> https://github.com/Kevin-Robertson/Invoke-TheHash
 
-• Benjamin Delpy por su herramienta Mimikatz -> https://github.com/gentilkiwi/mimikatz
+• **Benjamin Delpy** por su herramienta Mimikatz -> https://github.com/gentilkiwi/mimikatz
 
 
 # Contacto
