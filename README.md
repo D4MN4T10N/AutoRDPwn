@@ -15,7 +15,7 @@ Powershell 5.0 o superior
 ## Versión 3.7
 • Auto-detección de la versión de Powershell instalada
 
-• El usuario "AutoRDPwn" se elimina automáticamente al finalizar el ataque
+• El usuario "AutoRDPwn" se elimina automáticamente 2 horas después de realizar el ataque
 
 *El resto de cambios se pueden consultar en el fichero CHANGELOG
 
