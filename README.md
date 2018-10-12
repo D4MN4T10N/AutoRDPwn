@@ -67,7 +67,7 @@ Version 4.0
 
 • It is now possible to choose the language of the application and launch the attack on English versions of Windows
 
-* The rest of the changes can be consulted in the CHANGELOG file
+*The rest of the changes can be consulted in the CHANGELOG file
 
 # Use
 **Execution in a line:**
