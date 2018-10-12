@@ -60,7 +60,7 @@ Para más información, puede contactar a través de info@darkbyte.net
 Powershell 5.0 or higher
 
 # Changes
-Version 4.0
+## Version 4.0
 • Fixed a bug in the scheduled task to remove the user AutoRDPwn
 
 • The Scheluded Task attack has been replaced by Invoke-Command
