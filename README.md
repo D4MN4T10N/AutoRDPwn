@@ -81,7 +81,7 @@ https://darkbyte.net/autordpwn-la-guia-definitiva
 # License
 This project is licensed under the GNU 3.0 license - see the LICENSE file for more details.
 
-Credits and Acknowledgments
+# Credits and Acknowledgments
 • **Mark Russinovich** for his tool PsExec -> https://docs.microsoft.com/en-us/sysinternals/downloads/psexec
 
 • **Stas'M Corp.** for its RDP tool Wrapper -> https://github.com/stascorp/rdpwrap
