@@ -12,10 +12,12 @@ Powershell 5.0 o superior
 
 # Cambios
 
-## Versión 3.7
-• Auto-detección de la versión de Powershell instalada
+## Versión 4.0
+• Resuelto un bug en la tarea programada para eliminar el usuario AutoRDPwn
 
-• El usuario "AutoRDPwn" se elimina automáticamente 2 horas después de realizar el ataque
+• El ataque Scheluded Task ha sido reemplazado por Invoke-Command
+
+• Ahora es posible elegir el idioma de la aplicación y lanzar el ataque a versiones inglesas de Windows
 
 *El resto de cambios se pueden consultar en el fichero CHANGELOG
 
@@ -36,8 +38,6 @@ Este proyecto está licenciando bajo la licencia GNU 3.0 - ver el fichero LICENS
 
 # Créditos y Agradecimientos
 • **Mark Russinovich** por su herramienta PsExec -> https://docs.microsoft.com/en-us/sysinternals/downloads/psexec
-
-• **Marc R Kellerman** por su herramienta Invoke-CommandAs -> https://github.com/mkellerman/Invoke-CommandAs
 
 • **Stas'M Corp.** por su herramienta RDP Wrapper -> https://github.com/stascorp/rdpwrap
 
