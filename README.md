@@ -51,8 +51,11 @@ Este software no ofrece ningún tipo de garantía. Su uso es exclusivo para ento
 
 Para más información, puede contactar a través de info@darkbyte.net
 
+
 -------------------------------------------------------------------------------------------------------------
 # English description
+-------------------------------------------------------------------------------------------------------------
+
 
 **AutoRDPwn** is a script created in Powershell and designed to automate the **Shadow** attack on Microsoft Windows computers. This vulnerability allows a remote attacker to view his victim's desktop without his consent, and even control it on request. For its correct operation, it is necessary to comply with the requirements described in the user guide.
 
