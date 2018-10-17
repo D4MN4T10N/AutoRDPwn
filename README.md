@@ -25,7 +25,7 @@ Powershell 5.0 o superior
 # Uso
 **Ejecución en una línea:**
 
-powershell -ExecutionPolicy Bypass "cd $env:TEMP ; iwr https://goo.gl/HSkAXP -Outfile AutoRDPwn.ps1 ; .\AutoRDPwn.ps1"
+powershell -ExecutionPolicy Bypass "cd $env:TEMP ; iwr https://darkbyte.net/autordpwn.php -Outfile AutoRDPwn.ps1 ; .\AutoRDPwn.ps1"
 
 **La guía detallada de uso se encuentra en el siguiente enlace:**
 
