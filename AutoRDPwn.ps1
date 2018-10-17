@@ -30,8 +30,8 @@ function Show-Menu {
      Write-Host "[3] - Windows Management Instrumentation"
      Write-Host "[4] - InvokeCommand / PSSession"
      Write-Host "[5] - Windows Remote Assistance"
-     Write-Host "[M] - $txt2"
-     Write-Host "[X] - $txt3"
+     Write-Host "[M] - $txt1"
+     Write-Host "[X] - $txt2"
      Write-Host "" }
 
 function ConvertFrom-SecureToPlain {
@@ -63,9 +63,9 @@ function EnableTLS {
     default { Write-Host"" ; Write-Host "Wrong option, please try again" -ForegroundColor Magenta ; sleep -milliseconds 2000 }}} until ($input -in '1','2')
 
 if($Language -in 'English') {
-  $txt1  = "Your version of Powershell is not compatible with this script, closing.."
-  $txt2  = "Load additional modules"
-  $txt3  = "Close the program"
+  $txt1  = "Load additional modules"
+  $txt2  = "Close the program"
+  $txt3  = "Your version of Powershell is not compatible with this script, closing.."
   $txt4  = "Incorrect option, try again"
   $txt5  = "Choose how you want to launch the attack"
   $txt6  = "Choose the module you want to load"
@@ -101,9 +101,9 @@ if($Language -in 'English') {
   $Pwn6  = "RDP session agent"
 
 if($Language -in 'Spanish') {
-  $txt1  = "Tu versión de Powershell no es compatible con este script, cerrando.."
-  $txt2  = "Cargar módulos adicionales"
-  $txt3  = "Cerrar el programa"
+  $txt1  = "Cargar módulos adicionales"
+  $txt2  = "Cerrar el programa"
+  $txt3  = "Tu versión de Powershell no es compatible con este script, cerrando.."
   $txt4  = "Opción incorrecta, vuelve a intentarlo de nuevo"
   $txt5  = "Elige cómo quieres lanzar el ataque"
   $txt6  = "Elige el módulo que quieres cargar"
@@ -139,7 +139,7 @@ if($Language -in 'Spanish') {
   $Pwn6  = "Agente de sesión de RDP"
 
     $Powershell = (Get-Host | findstr "Version" | select -First 1).split(':')[1].trim() ; Write-Host""
-    if($Powershell -lt 5) { Write-Host "$txt1" -ForegroundColor 'Red' ; sleep -milliseconds 3000 ; exit }
+    if($Powershell -lt 5) { Write-Host "$txt3" -ForegroundColor 'Red' ; sleep -milliseconds 3000 ; exit }
 
     do { Show-Banner ; Show-Menu
     $input = Read-Host -Prompt "$txt5"
