@@ -72,7 +72,7 @@ Powershell 5.0 or higher
 # Use
 **Execution in a line:**
 
-powershell -ExecutionPolicy Bypass "cd $ env: TEMP; iwr https://goo.gl/HSkAXP -Outfile AutoRDPwn.ps1;. \ AutoRDPwn.ps1"
+powershell -ExecutionPolicy Bypass "cd $ env: TEMP; iwr https://darkbyte.net/autordpwn.php -Outfile AutoRDPwn.ps1;. \ AutoRDPwn.ps1"
 
 **The detailed guide of use can be found at the following link:**
 
