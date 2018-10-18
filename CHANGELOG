@@ -1,6 +1,13 @@
+# Versión 4.0
+• Resuelto un bug en la tarea programada para eliminar el usuario AutoRDPwn
+• El ataque Scheluded Task ha sido reemplazado por Invoke-Command
+• Ahora es posible elegir el idioma de la aplicación y lanzar el ataque a versiones inglesas de Windows
+
+
 # Versión 3.7
 • Auto-detección de la versión de Powershell instalada
 • El usuario "AutoRDPwn" se elimina automáticamente 2 horas después de realizar el ataque
+
 
 # Versión 3.5
 • El ataque Pass The Hash pasa a ser estable
