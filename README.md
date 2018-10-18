@@ -12,12 +12,10 @@ Powershell 5.0 o superior
 
 # Cambios
 
-## Versión 4.0
-• Resuelto un bug en la tarea programada para eliminar el usuario AutoRDPwn
+## Versión 4.2
+• Nuevo módulo disponible para Mimikatz: Recuperar contraseñas en texto plano 
 
-• El ataque Scheluded Task ha sido reemplazado por Invoke-Command
-
-• Ahora es posible elegir el idioma de la aplicación y lanzar el ataque a versiones inglesas de Windows
+• La carpeta RDP Wrapper ahora estará oculta (attrib +h)
 
 *El resto de cambios se pueden consultar en el fichero CHANGELOG
 
@@ -60,12 +58,10 @@ Para más información, puede contactar a través de info@darkbyte.net
 Powershell 5.0 or higher
 
 # Changes
-## Version 4.0
-• Fixed a bug in the scheduled task to remove the user AutoRDPwn
+## Version 4.2
+• New module available for Mimikatz: Recover plaintext passwords
 
-• The Scheluded Task attack has been replaced by Invoke-Command
-
-• It is now possible to choose the language of the application and launch the attack on English versions of Windows
+• The RDP Wrapper folder will now be hidden (attrib + h)
 
 *The rest of the changes can be consulted in the CHANGELOG file
 
