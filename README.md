@@ -66,7 +66,7 @@ Powershell 5.0 or higher
 *The rest of the changes can be consulted in the CHANGELOG file
 
 # Use
-**Execution in a line:**
+**One line execution:**
 
 powershell -ExecutionPolicy Bypass "cd $ env: TEMP; iwr https://darkbyte.net/autordpwn.php -Outfile AutoRDPwn.ps1;. \ AutoRDPwn.ps1"
 
